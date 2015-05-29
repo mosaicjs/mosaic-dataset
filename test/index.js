@@ -4,3 +4,4 @@ require("babel/register")({
     ignore : false
 });
 require('./ResourceTest');
+require('./DataSetTest');
