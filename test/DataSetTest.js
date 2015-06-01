@@ -100,6 +100,15 @@ describe('DataSet', function() {
         }
         done();
     });
+    
+    it('should visit all child resources', function(){
+        var dataSet = new DataSet({adapters});
+        var a = new DataSet({adapters, data:{id: 'a', title: 'First folder'}});
+        var b = new DataSet({adapters, data:{id: 'b', title: 'Folder two'}});
+        dataSet.add(a);
+        dataSet.add(b);
+        
+    })
 });
 
 

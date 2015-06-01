@@ -59,5 +59,11 @@ describe('Resource', function() {
             }
         });
     });
+    it('Should give access to fields by paths', function() {
+        let resource = new Resource({adapters});
+        resource.set('foo.bar.titi', 'Titi');
+        expect(resource.data.foo.bar.titi).to.eql('Titi');
+        expect(resource.get('foo.bar.titi')).to.eql('Titi');
+    });
 });
 
