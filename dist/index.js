@@ -70,9 +70,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _libDataSet2 = _interopRequireDefault(_libDataSet);
 
+	var _libDerivativeDataSet = __webpack_require__(5);
+
+	var _libDerivativeDataSet2 = _interopRequireDefault(_libDerivativeDataSet);
+
 	exports['default'] = {
 	    Resource: _libResource2['default'],
-	    DataSet: _libDataSet2['default']
+	    DataSet: _libDataSet2['default'],
+	    DerivativeDataSet: _libDerivativeDataSet2['default']
 	};
 	module.exports = exports['default'];
 
@@ -138,14 +143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Returns the type key for this resource.
 	         */
 	        value: function getTypeKey() {
-	            var data = this.data;
-	            var type = undefined;
-	            if (data.properties) {
-	                type = data.properties.type;
-	            }
-	            if (!type) {
-	                type = data.type;
-	            }
+	            var type = this.get('properties.type') || this.get('type');
 	            if (type) {
 	                type = _mosaicAdapters.TypeKey.getTypeKey(type);
 	            } else {
@@ -187,6 +185,80 @@ return /******/ (function(modules) { // webpackBootstrap
 	                id = this._id = this._id || idCounter++;
 	            }
 	            return id;
+	        }
+	    }, {
+	        key: 'get',
+
+	        /**
+	         * Returns a value corresponding to the specified path.
+	         * 
+	         * @param path
+	         *            an segment name array or a string path where individual
+	         *            segments are separated by the '.' symbol
+	         */
+	        value: function get(path) {
+	            if (typeof path === 'string') {
+	                var array = path.split('.');
+	                return this.get(array);
+	            }
+	            var data = this.data;
+	            var len = path ? path.length : 0;
+	            var i = undefined;
+	            for (i = 0; data && i < len; i++) {
+	                var segment = path[i];
+	                data = data[segment];
+	            }
+	            return i === len ? data : null;
+	        }
+	    }, {
+	        key: 'set',
+
+	        /**
+	         * Sets a new value for the specified path.
+	         */
+	        value: function set(path, value) {
+	            if (typeof path === 'string') {
+	                var array = path.split('.');
+	                return this.set(array, value);
+	            }
+	            var data = this.data;
+	            var len = path ? path.length : 0;
+	            var i = undefined;
+	            for (i = 0; i < len - 1; i++) {
+	                var segment = path[i];
+	                var next = data[segment];
+	                if (!next) break;
+	                data = next;
+	            }
+	            // Add missing objects
+	            for (; i < len - 1; i++) {
+	                var segment = path[i];
+	                data = data[segment] = {};
+	            }
+	            if (data) {
+	                var segment = path[path.length - 1];
+	                data[segment] = value;
+	            }
+	            return this;
+	        }
+	    }, {
+	        key: 'visit',
+
+	        /**
+	         * Visits this resource
+	         * 
+	         * @param visitor.before
+	         *            this method is called before this resource is visited
+	         * @param visitor.after
+	         *            this method is called after this resource is visited
+	         */
+	        value: function visit(visitor) {
+	            if (visitor.before) {
+	                visitor.before.call(visitor, this);
+	            }
+	            if (visitor.after) {
+	                visitor.after.call(visitor, this);
+	            }
 	        }
 	    }]);
 
@@ -253,6 +325,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(DataSet, _Resource);
 
 	    _createClass(DataSet, [{
+	        key: 'close',
+
+	        /** Do-nothing destructor */
+	        value: function close() {}
+	    }, {
 	        key: 'children',
 
 	        /**
@@ -457,6 +534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function update(action) {
 	            return this.action('update', function (intent) {
 	                action.call(this);
+	                return true;
 	            });
 	        }
 	    }, {
@@ -505,6 +583,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _getResourceType() {
 	            return _Resource3['default'];
 	        }
+	    }, {
+	        key: 'visit',
+
+	        /**
+	         * Visits this resource
+	         * 
+	         * @param visitor.before
+	         *            this method is called before this resource is visited
+	         * @param visitor.after
+	         *            this method is called after this resource is visited
+	         */
+	        value: function visit(visitor) {
+	            var result;
+	            if (visitor.before) {
+	                result = visitor.before.call(visitor, this);
+	            }
+	            if (result !== 'false') {
+	                this.each(function (child) {
+	                    return child.visit(visitor);
+	                });
+	            }
+	            if (visitor.after) {
+	                visitor.after.call(visitor, this);
+	            }
+	            return result;
+	        }
 	    }]);
 
 	    return DataSet;
@@ -520,6 +624,94 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _DataSet2 = __webpack_require__(3);
+
+	var _DataSet3 = _interopRequireDefault(_DataSet2);
+
+	var DerivativeDataSet = (function (_DataSet) {
+	    function DerivativeDataSet(options) {
+	        var _get2;
+
+	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	            args[_key - 1] = arguments[_key];
+	        }
+
+	        _classCallCheck(this, DerivativeDataSet);
+
+	        (_get2 = _get(Object.getPrototypeOf(DerivativeDataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
+	        if (!options) {
+	            throw new Error('Parameters are not defined');
+	        }
+	        var dataSet = this.dataSet = options.object || options.dataSet;
+	        if (!this.adapters && dataSet) {
+	            this.adapters = dataSet.adapters;
+	        }
+	        this._onMainDataSetUpdate = this._onMainDataSetUpdate.bind(this);
+	        dataSet.on('update', this._onMainDataSetUpdate);
+	    }
+
+	    _inherits(DerivativeDataSet, _DataSet);
+
+	    _createClass(DerivativeDataSet, [{
+	        key: 'close',
+	        value: function close() {
+	            _get(Object.getPrototypeOf(DerivativeDataSet.prototype), 'close', this).call(this);
+	            var dataSet = this.dataSet;
+	            dataSet.off('update', this._onMainDataSetUpdate, this);
+	            delete this._dataSet;
+	        }
+	    }, {
+	        key: 'dataSet',
+
+	        /** Access to the internal dataset */
+	        set: function (set) {
+	            this._dataSet = set;
+	        },
+	        get: function () {
+	            return this._dataSet;
+	        }
+	    }, {
+	        key: '_onMainDataSetUpdate',
+
+	        /**
+	         * This method should be overloaded in subclasses to define exact behaveour
+	         * of objects when the parent set changes.
+	         */
+	        value: function _onMainDataSetUpdate(intent) {
+	            intent.then((function () {
+	                var dataSet = this.dataSet;
+	                var values = [].concat(this.dataSet.children);
+	                this.children = values;
+	            }).bind(this));
+	        }
+	    }]);
+
+	    return DerivativeDataSet;
+	})(_DataSet3['default']);
+
+	exports['default'] = DerivativeDataSet;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ])
