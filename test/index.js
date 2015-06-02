@@ -6,3 +6,4 @@ require("babel/register")({
 require('./ResourceTest');
 require('./DataSetTest');
 require('./DerivativeDataSetTest');
+require('./DataSetFilteredTest');

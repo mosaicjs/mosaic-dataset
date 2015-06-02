@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "mosaic-adapters": "^0.1.2",
-    "mosaic-intents": "^0.1.1"
+    "mosaic-intents": "^0.1.2"
   }
 }
