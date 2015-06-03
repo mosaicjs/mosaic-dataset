@@ -74,10 +74,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _libDerivativeDataSet2 = _interopRequireDefault(_libDerivativeDataSet);
 
+	var _libDataSetFiltered = __webpack_require__(6);
+
+	var _libDataSetFiltered2 = _interopRequireDefault(_libDataSetFiltered);
+
+	var _libDataSetPaginated = __webpack_require__(7);
+
+	var _libDataSetPaginated2 = _interopRequireDefault(_libDataSetPaginated);
+
 	exports['default'] = {
 	    Resource: _libResource2['default'],
 	    DataSet: _libDataSet2['default'],
-	    DerivativeDataSet: _libDerivativeDataSet2['default']
+	    DerivativeDataSet: _libDerivativeDataSet2['default'],
+	    DataSetFiltered: _libDataSetFiltered2['default'],
+	    DataSetPaginated: _libDataSetPaginated2['default'],
+	    registerDataSetAdapters: function registerDataSetAdapters(adapters) {
+	        adapters.registerAdapter(_libDataSet2['default'], _libDataSetFiltered2['default']);
+	        adapters.registerAdapter(_libDataSet2['default'], _libDataSetPaginated2['default']);
+	    }
 	};
 	module.exports = exports['default'];
 
@@ -118,9 +132,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    function Resource(options) {
+	        var _get2;
+
+	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	            args[_key - 1] = arguments[_key];
+	        }
+
 	        _classCallCheck(this, Resource);
 
-	        _get(Object.getPrototypeOf(Resource.prototype), 'constructor', this).call(this, options);
+	        (_get2 = _get(Object.getPrototypeOf(Resource.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        this.data = options.data;
 	    }
 
@@ -304,7 +324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var DataSet = (function (_Resource) {
 
 	    /**
-	     * Class constructor. It defines children array and registers event
+	     * Class constructor. It defines resource array and registers event
 	     * listeners updating internal resource indexes.
 	     */
 
@@ -319,7 +339,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        (_get2 = _get(Object.getPrototypeOf(DataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        (0, _mosaicIntents.Intents)(this);
-	        this.children = options.children;
+	        this.options = options || {};
+	        this.resources = this.options.resources;
 	    }
 
 	    _inherits(DataSet, _Resource);
@@ -330,13 +351,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /** Do-nothing destructor */
 	        value: function close() {}
 	    }, {
-	        key: 'children',
+	        key: '_getOptionsValue',
+
+	        /** Returns an options value. */
+	        value: function _getOptionsValue(key, defaultValue) {
+	            return this.options[key] || defaultValue;
+	        }
+	    }, {
+	        key: 'resources',
 
 	        /**
-	         * Returns a list of all child resources.
+	         * Returns a list of all managed resources.
 	         */
 	        get: function () {
-	            return this._children;
+	            return this._resources;
 	        },
 
 	        /**
@@ -344,13 +372,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * then they are wrapped in the Resource container.
 	         */
 	        set: function (list) {
+	            return this.setResources(list);
+	        }
+	    }, {
+	        key: 'setResources',
+
+	        /**
+	         * Sets new resources. If the specified list contains non-resource instances
+	         * then they are wrapped in the Resource container.
+	         */
+	        value: function setResources(list) {
 	            return this.update(function () {
-	                this._children = [];
+	                this._resources = [];
 	                this._index = {};
 	                var len = list ? list.length || 0 : 0;
 	                for (var pos = 0; pos < len; pos++) {
 	                    var r = this._wrap(list[pos]);
-	                    this._children[pos] = r;
+	                    this._resources[pos] = r;
 	                    this._index[r.id] = [r, pos];
 	                }
 	            });
@@ -360,12 +398,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Returns an entity from the specified position. Basically it returns value
-	         * this.children[pos].
+	         * this.resources[pos].
 	         */
 	        value: function get(pos) {
-	            var children = this.children;
-	            if (pos < 0 || pos >= children.length) return;
-	            return children[pos];
+	            var resources = this.resources;
+	            if (pos < 0 || pos >= resources.length) return;
+	            return resources[pos];
 	        }
 	    }, {
 	        key: 'has',
@@ -385,15 +423,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function set(d, pos) {
 	            return this.update(function () {
 	                if (pos === undefined) {
-	                    pos = this._children.length;
+	                    pos = this._resources.length;
 	                }
-	                pos = Math.max(0, Math.min(this._children.length, +pos));
-	                var prev = this._children[pos];
+	                pos = Math.max(0, Math.min(this._resources.length, +pos));
+	                var prev = this._resources[pos];
 	                if (prev) {
 	                    delete this._index[prev[0].id];
 	                }
 	                var r = this._wrap(d);
-	                this._children[pos] = r;
+	                this._resources[pos] = r;
 	                this._index[r.id] = [r, pos];
 	            });
 	        }
@@ -433,15 +471,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function remove(pos) {
 	            return this.update(function () {
-	                var children = this._children;
-	                if (pos === undefined || pos < 0 || pos >= children.length) {
+	                var resources = this._resources;
+	                if (pos === undefined || pos < 0 || pos >= resources.length) {
 	                    return false;
 	                }
-	                var r = children[pos];
+	                var r = resources[pos];
 	                delete this._index[r.id];
-	                children.splice(pos, 1);
-	                for (var i = pos; i < children.length; i++) {
-	                    var _r = children[i];
+	                resources.splice(pos, 1);
+	                for (var i = pos; i < resources.length; i++) {
+	                    var _r = resources[i];
 	                    var slot = this._index[_r.id];
 	                    if (!slot) throw new Error('DataSet index is broken');
 	                    slot[1]--;
@@ -466,60 +504,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Returns the number of elements in this set.
 	         */
 	        get: function () {
-	            return this.children.length;
+	            return this.resources.length;
 	        }
 	    }, {
 	        key: 'size',
 
 	        /**
 	         * Returns the size of this set (length of the underlying array with
-	         * children).
+	         * resources).
 	         */
 	        value: function size() {
-	            return this.children.length;
+	            return this.resources.length;
 	        }
 	    }, {
 	        key: 'each',
 
 	        /**
-	         * Iterates over all child elements and calls the specified visitor function
-	         * in the given context. If the specified visitor function returns
+	         * Iterates over all resources and calls the specified visitor function in
+	         * the given context. If the specified visitor function returns
 	         * <code>false</code> then the iteration processes stops.
 	         */
 	        value: function each(visitor, context) {
-	            var children = this.children;
-	            for (var i = 0; i < children.length; i++) {
-	                var child = children[i];
-	                if (visitor.call(context, child, i) === false) {
-	                    break;
-	                }
-	            }
+	            return this.resources.forEach(visitor, context);
 	        }
 	    }, {
 	        key: 'map',
 
 	        /**
-	         * Calls the specified visitor function with each child in the list and
+	         * Calls the specified visitor function with each resource in the list and
 	         * returns a list of results. If the visitor returns an undefined value then
 	         * it is not added to the resulting list.
 	         */
 	        value: function map(visitor, context) {
-	            var result = [];
-	            var children = this.children;
-	            for (var i = 0; i < children.length; i++) {
-	                var child = children[i];
-	                var r = visitor.call(context, child, i);
-	                if (r !== undefined) {
-	                    result.push(r);
-	                }
-	            }
-	            return result;
+	            return this.resources.map(visitor, context);
+	        }
+	    }, {
+	        key: 'filter',
+
+	        /**
+	         * Calls the specified visitor function with each resource in the list and
+	         * returns a list of results. If the visitor returns an undefined value then
+	         * it is not added to the resulting list.
+	         */
+	        value: function filter(visitor, context) {
+	            return this.resources.filter(visitor, context);
 	        }
 	    }, {
 	        key: 'byId',
 
 	        /**
-	         * Returns a child object by its identifier.
+	         * Returns a resource by its identifier.
 	         */
 	        value: function byId(id) {
 	            var slot = this._index[id];
@@ -546,7 +580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function _wrap(data) {
 	            var resource = data;
-	            var ResourceType = this._getResourceType();
+	            var ResourceType = this.ResourceType;
 	            if (!(data instanceof ResourceType)) {
 	                resource = new ResourceType({
 	                    adapters: this.adapters,
@@ -575,12 +609,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return result;
 	        }
 	    }, {
-	        key: '_getResourceType',
+	        key: 'ResourceType',
 
 	        /**
 	         * Returns the default type of instances managed by this data set.
 	         */
-	        value: function _getResourceType() {
+	        get: function () {
 	            return _Resource3['default'];
 	        }
 	    }, {
@@ -600,8 +634,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result = visitor.before.call(visitor, this);
 	            }
 	            if (result !== 'false') {
-	                this.each(function (child) {
-	                    return child.visit(visitor);
+	                this.each(function (resource) {
+	                    return resource.visit(visitor);
 	                });
 	            }
 	            if (visitor.after) {
@@ -649,6 +683,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _DataSet3 = _interopRequireDefault(_DataSet2);
 
+	var DATA_SET_KEY = Symbol('_dataSet');
+
 	var DerivativeDataSet = (function (_DataSet) {
 	    function DerivativeDataSet(options) {
 	        var _get2;
@@ -663,12 +699,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!options) {
 	            throw new Error('Parameters are not defined');
 	        }
-	        var dataSet = this.dataSet = options.object || options.dataSet;
+	        var dataSet = this.dataSet = options.dataSet || this.adaptable;
 	        if (!this.adapters && dataSet) {
 	            this.adapters = dataSet.adapters;
 	        }
 	        this._onMainDataSetUpdate = this._onMainDataSetUpdate.bind(this);
 	        dataSet.on('update', this._onMainDataSetUpdate);
+	        this._handleMainDataSetUpdate();
 	    }
 
 	    _inherits(DerivativeDataSet, _DataSet);
@@ -678,32 +715,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function close() {
 	            _get(Object.getPrototypeOf(DerivativeDataSet.prototype), 'close', this).call(this);
 	            var dataSet = this.dataSet;
-	            dataSet.off('update', this._onMainDataSetUpdate, this);
+	            dataSet.off('update', this._onMainDataSetUpdate);
 	            delete this._dataSet;
+	        }
+	    }, {
+	        key: '_getOptionsValue',
+
+	        /** Returns an options value. */
+	        value: function _getOptionsValue(key, defaultValue) {
+	            var result = _get(Object.getPrototypeOf(DerivativeDataSet.prototype), '_getOptionsValue', this).call(this, key);
+	            if (!result) {
+	                var dataSet = this.dataSet;
+	                if (dataSet) {
+	                    result = dataSet._getOptionsValue(key, defaultValue);
+	                }
+	            }
+	            return result;
 	        }
 	    }, {
 	        key: 'dataSet',
 
 	        /** Access to the internal dataset */
 	        set: function (set) {
-	            this._dataSet = set;
+	            if (set instanceof _DataSet3['default']) {
+	                this[DATA_SET_KEY] = set;
+	            } else {
+	                delete this[DATA_SET_KEY];
+	            }
 	        },
 	        get: function () {
-	            return this._dataSet;
+	            return this[DATA_SET_KEY];
 	        }
 	    }, {
 	        key: '_onMainDataSetUpdate',
 
 	        /**
-	         * This method should be overloaded in subclasses to define exact behaveour
-	         * of objects when the parent set changes.
+	         * This method is called when the parent dataset is updated.
 	         */
 	        value: function _onMainDataSetUpdate(intent) {
 	            intent.then((function () {
-	                var dataSet = this.dataSet;
-	                var values = [].concat(this.dataSet.children);
-	                this.children = values;
+	                this._handleMainDataSetUpdate();
 	            }).bind(this));
+	        }
+	    }, {
+	        key: '_handleMainDataSetUpdate',
+
+	        /**
+	         * This method should be overloaded in subclasses to define exact behaveour
+	         * of objects when the parent set changes.
+	         */
+	        value: function _handleMainDataSetUpdate() {
+	            this.resources = [].concat(this.dataSet.resources);
 	        }
 	    }]);
 
@@ -711,6 +773,218 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_DataSet3['default']);
 
 	exports['default'] = DerivativeDataSet;
+	module.exports = exports['default'];
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _DataSet = __webpack_require__(3);
+
+	var _DataSet2 = _interopRequireDefault(_DataSet);
+
+	var _DerivativeDataSet2 = __webpack_require__(5);
+
+	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
+
+	var DataSetFiltered = (function (_DerivativeDataSet) {
+	    function DataSetFiltered(options) {
+	        var _get2;
+
+	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	            args[_key - 1] = arguments[_key];
+	        }
+
+	        _classCallCheck(this, DataSetFiltered);
+
+	        (_get2 = _get(Object.getPrototypeOf(DataSetFiltered.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
+	        if (!options) return;
+	        var filter = options.filter;
+	        if (typeof filter === 'function') {
+	            this._filter = filter;
+	        }
+	    }
+
+	    _inherits(DataSetFiltered, _DerivativeDataSet);
+
+	    _createClass(DataSetFiltered, [{
+	        key: '_handleMainDataSetUpdate',
+	        value: function _handleMainDataSetUpdate() {
+	            var dataSet = this.dataSet;
+	            var result = dataSet.resources.filter(this._filter, this);
+	            this.resources = result;
+	        }
+	    }, {
+	        key: '_filter',
+	        value: function _filter(r) {
+	            return !!r;
+	        }
+	    }]);
+
+	    return DataSetFiltered;
+	})(_DerivativeDataSet3['default']);
+
+	exports['default'] = DataSetFiltered;
+	module.exports = exports['default'];
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+	var _DerivativeDataSet2 = __webpack_require__(5);
+
+	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
+
+	var DataSetPaginated = (function (_DerivativeDataSet) {
+
+	    /** Initializes this paginated data set. */
+
+	    function DataSetPaginated() {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        _classCallCheck(this, DataSetPaginated);
+
+	        _get(Object.getPrototypeOf(DataSetPaginated.prototype), 'constructor', this).apply(this, args);
+	        var page = this._getOptionsValue('page', 0);
+	        this.pageIdx = page;
+	        this.pageSize = this._getOptionsValue('pageSize', 10);
+	    }
+
+	    _inherits(DataSetPaginated, _DerivativeDataSet);
+
+	    _createClass(DataSetPaginated, [{
+	        key: 'pagePos',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Returns position of the first element visible in the page */
+	        get: function () {
+	            var result = this.pageIdx * this.pageSize;
+	            return result;
+	        }
+	    }, {
+	        key: 'focusPos',
+
+	        /**
+	         * Activates the page corresponding containing element in the specified
+	         * position.
+	         */
+	        value: function focusPos(idx) {
+	            idx = idx || 0;
+	            idx = Math.max(0, Math.min(this.dataSet.length - 1, idx));
+	            var pageIdx = Math.floor(idx / this.pageSize);
+	            return this.setPageIdx(pageIdx);
+	        }
+	    }, {
+	        key: 'pageIdx',
+
+	        // ----------------------------------------------------------------------
+	        // Page index
+
+	        /** Returns the index of the currently active page. */
+	        get: function () {
+	            return this._pageIdx || 0;
+	        },
+
+	        /** Sets a new page index */
+	        set: function (pageIdx) {
+	            this.setPageIdx(pageIdx);
+	        }
+	    }, {
+	        key: 'setPageIdx',
+
+	        /** Sets a new page index */
+	        value: function setPageIdx(pageIdx) {
+	            pageIdx = pageIdx || 0;
+	            var dataSet = this.dataSet;
+	            var pageSize = this.pageSize;
+	            var size = dataSet.size();
+	            pageIdx = this._pageIdx = Math.max(0, Math.min(pageIdx, this.pageNumber - 1));
+	            var startPos = pageIdx * pageSize;
+	            var endPos = Math.min(size - 1, startPos + pageSize - 1);
+	            var resources = [];
+	            for (var i = startPos; i <= endPos; i++) {
+	                var resource = dataSet.get(i);
+	                resources.push(resource);
+	            }
+	            return this.setResources(resources);
+	        }
+	    }, {
+	        key: 'pageSize',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Sets a new page size */
+	        set: function (pageSize) {
+	            var firstPageItemIdx = this.pagePos;
+	            this._pageSize = pageSize || this.defaultPageSize || 10;
+	            return this.focusPos(firstPageItemIdx);
+	        },
+
+	        /** Returns the current page size */
+	        get: function () {
+	            return this._pageSize || this._getOptionsValue('pageSize') || this.defaultPageSize;
+	        }
+	    }, {
+	        key: 'pageNumber',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Returns the total page number in this data set. */
+	        get: function () {
+	            return Math.ceil(this.dataSet.length / this.pageSize);
+	        }
+	    }, {
+	        key: '_onMainDataSetUpdate',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Updates the list */
+	        value: function _onMainDataSetUpdate(intent) {
+	            return intent.then((function () {
+	                return this.pageSize = this.pageSize;
+	            }).bind(this));
+	        }
+	    }]);
+
+	    return DataSetPaginated;
+	})(_DerivativeDataSet3['default']);
+
+	exports['default'] = DataSetPaginated;
 	module.exports = exports['default'];
 
 /***/ }
