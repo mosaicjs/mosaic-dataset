@@ -16,7 +16,7 @@ describe('DerivativeDataSet', function() {
             handled = true;
             intent.then(function(){
                handled = true;
-               check(dataSet.children, set.children);
+               check(dataSet.resources, set.resources);
             }).then(function(){ done(); }, done); 
         });
         let list = [];
@@ -29,7 +29,7 @@ describe('DerivativeDataSet', function() {
             list.push(data);
         }
         expect(handled).to.be(undefined);
-        dataSet.children = list;
+        dataSet.resources = list;
         expect(handled).to.be(true);
     });
 });

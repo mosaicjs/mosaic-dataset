@@ -30,7 +30,7 @@ describe('DataSetFiltered', function() {
             index[data.id] = data;
         }
         expect(subsetUpdateIntent).to.be(null);
-        dataSet.setAll(list).then(function(){
+        dataSet.setResources(list).then(function(){
             expect(dataSet.length).to.eql(count);
             expect(!!subsetUpdateIntent).to.be(true);
             return subsetUpdateIntent.promise;
@@ -38,11 +38,11 @@ describe('DataSetFiltered', function() {
             expect(subSet.length).to.eql(count / 2);
             let positions = [];
             for (let i = 0; i < list.length; i++) {
-                let r1 = dataSet.children[i];
+                let r1 = dataSet.resources[i];
                 let id = 'id-' + i;
                 let r2 = subSet.byId(id);
                 if (i % 2 === 0) {
-                    if (dataSet.children[i] !== subSet.children[i / 2]) {
+                    if (dataSet.resources[i] !== subSet.resources[i / 2]) {
                         expect().fail();
                     }
                     if (r1 !== r2) {

@@ -30,7 +30,7 @@ describe('DataSet', function() {
         report('Load ' + count + ' objects by position and by their index', function(){
             let positions = [];
             for (let i = 0; i < list.length; i++) {
-                let r1 = dataSet.children[i];
+                let r1 = dataSet.resources[i];
                 if (!r1) expect().fail();
                 if (r1.data !== list[i]) expect().fail();
 
@@ -79,7 +79,7 @@ describe('DataSet', function() {
             }
         });
         report('Set ' + count + ' objects in a DataSet', function(){
-            dataSet.children = list;
+            dataSet.resources = list;
         });
         expect(dataSet.size()).to.eql(count);
         expect(dataSet.length).to.eql(count);
@@ -95,13 +95,13 @@ describe('DataSet', function() {
             let resource1 = dataSet.get(i);
             if (!resource1) expect().fail();
             if (resource1.data !== data) expect().fail();
-            let resource2 = dataSet.children[i];
+            let resource2 = dataSet.resources[i];
             if (resource2 !== resource1) expect().fail();
         }
         done();
     });
     
-    it('should visit all child resources', function(){
+    it('should visit all resources', function(){
         var dataSet = new DataSet({adapters});
         var a = new DataSet({adapters, data:{id: 'a', title: 'First folder'}});
         var b = new DataSet({adapters, data:{id: 'b', title: 'Folder two'}});
