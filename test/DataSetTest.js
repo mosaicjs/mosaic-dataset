@@ -193,7 +193,6 @@ describe('DataSet', function() {
             '</root>',
         ].join('\n');
         expect(str).to.eql(control);
-        console.log(str);
     })
 });
 
