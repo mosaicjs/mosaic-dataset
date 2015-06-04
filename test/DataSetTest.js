@@ -45,7 +45,7 @@ describe('DataSet', function() {
         
         report('Delete ' + count + ' objects by their id', function(){
             for (let i = count - 1; i >= 0; i--) {
-                  var id = 'id-' + i;
+                  let id = 'id-' + i;
                   let first = dataSet.get(i);
                   if (!first) expect().fail();
                   let second = dataSet.byId(id);
@@ -102,16 +102,100 @@ describe('DataSet', function() {
     });
     
     it('should visit all resources', function(){
-        var dataSet = new DataSet({adapters});
-        var a = new DataSet({adapters, data:{id: 'a', title: 'First folder'}});
-        var b = new DataSet({adapters, data:{id: 'b', title: 'Folder two'}});
-        dataSet.add(a);
-        dataSet.add(b);
+        let counter = 0;
+        function newItems(number) {
+            let list = []; 
+            for (let i = 0; i < number; i++) {
+                let id = counter++;
+                let data = {
+                        id : 'id-' + id,
+                        title: 'item-' + id
+                };
+                list.push(data);
+            }
+            return list;
+        }
+        let dataSet = new DataSet({adapters,data:{id:'root',title:'Root'}});
+        let a = new DataSet({adapters, data:{id: 'a', title: 'First folder'}});
+        a.resources = newItems(5);
+        let b = new DataSet({adapters, data:{id: 'b', title: 'Folder two'}});
+        b.resources = newItems(10);
+        let c = new DataSet({adapters, data:{id: 'c', title: 'Folder three'}});
+        c.resources = newItems(5);
         
+        let list = [a, b, c].concat(newItems(5));
+        dataSet.resources = list;
+        
+        let str = '';
+        dataSet.visit({
+            depth : 0,
+            prev : null,
+            _getShift : function(){
+                let result = '\n';  
+                for (let i=0; i<this.depth; i++) {
+                    result += '    ';
+                }
+                return result;
+            },
+            before : function(r){
+                let shift = this._getShift();
+                this.print(shift + '<' + r.data.id + ' title="' + r.data.title + '">');
+                this.depth++;
+                this.prev = r; 
+            },
+            after : function(r){
+                this.depth--;
+                let shift = '';
+                if (r !== this.prev) {
+                    shift = this._getShift();
+                }
+                this.print(shift + '</' + r.data.id + '>');
+                this.prev = r;
+            },
+            print : function(msg){
+                str += msg;
+            }
+        });
+        let control = [
+            '',
+            '<root title="Root">',
+            '    <a title="First folder">',
+            '        <id-0 title="item-0"></id-0>',
+            '        <id-1 title="item-1"></id-1>',
+            '        <id-2 title="item-2"></id-2>',
+            '        <id-3 title="item-3"></id-3>',
+            '        <id-4 title="item-4"></id-4>',
+            '    </a>',
+            '    <b title="Folder two">',
+            '        <id-5 title="item-5"></id-5>',
+            '        <id-6 title="item-6"></id-6>',
+            '        <id-7 title="item-7"></id-7>',
+            '        <id-8 title="item-8"></id-8>',
+            '        <id-9 title="item-9"></id-9>',
+            '        <id-10 title="item-10"></id-10>',
+            '        <id-11 title="item-11"></id-11>',
+            '        <id-12 title="item-12"></id-12>',
+            '        <id-13 title="item-13"></id-13>',
+            '        <id-14 title="item-14"></id-14>',
+            '    </b>',
+            '    <c title="Folder three">',
+            '        <id-15 title="item-15"></id-15>',
+            '        <id-16 title="item-16"></id-16>',
+            '        <id-17 title="item-17"></id-17>',
+            '        <id-18 title="item-18"></id-18>',
+            '        <id-19 title="item-19"></id-19>',
+            '    </c>',
+            '    <id-20 title="item-20"></id-20>',
+            '    <id-21 title="item-21"></id-21>',
+            '    <id-22 title="item-22"></id-22>',
+            '    <id-23 title="item-23"></id-23>',
+            '    <id-24 title="item-24"></id-24>',
+            '</root>',
+        ].join('\n');
+        expect(str).to.eql(control);
+        console.log(str);
     })
 });
-
-
 
 function report(msg, action){
     let start = Date.now();

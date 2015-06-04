@@ -65,5 +65,23 @@ describe('Resource', function() {
         expect(resource.data.foo.bar.titi).to.eql('Titi');
         expect(resource.get('foo.bar.titi')).to.eql('Titi');
     });
+    it('Should allow to visit resource', function() {
+        let resource = new Resource({adapters});
+        let str = '';
+        resource.visit({
+            before : function(r){
+                expect(r).to.be(resource);
+                str += '[before]';
+            },
+            after : function(r){
+                expect(r).to.be(resource);
+                str += '[after]';
+            }
+        });
+        expect(str).to.be('[before][after]');
+        resource.set('foo.bar.titi', 'Titi');
+        expect(resource.data.foo.bar.titi).to.eql('Titi');
+        expect(resource.get('foo.bar.titi')).to.eql('Titi');
+    });
 });
 
