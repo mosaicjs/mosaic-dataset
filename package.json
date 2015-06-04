@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mosaicjs/mosaic-datasets"
+    "url": "https://github.com/mosaicjs/mosaic-dataset"
   },
   "keywords": [
     "adapters"
@@ -18,7 +18,7 @@
   "author": "Mikhail Kotelnikov <mikhail.kotelnikov@ubimix.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mosaicjs/mosaic-datasets/issues"
+    "url": "https://github.com/mosaicjs/mosaic-dataset/issues"
   },
   "devDependencies": {
     "babel": "^5.4.7",
