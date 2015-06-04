@@ -7,4 +7,4 @@ require('./ResourceTest');
 require('./DataSetTest');
 require('./DerivativeDataSetTest');
 require('./DataSetFilteredTest');
-require('./DataSetPaginationTest');
+require('./DataSetPaginatedTest');

@@ -1,7 +1,7 @@
 import expect from 'expect.js';
 
 import { AdapterManager } from 'mosaic-adapters';
-import { DataSet, DataSetPagination, registerDataSetAdapters } from '..';
+import { DataSet, DataSetPaginated, registerDataSetAdapters } from '..';
 
 describe('DataSetPaginated', function() {
     it('should give access to individual paged resources', function(){
@@ -21,9 +21,8 @@ describe('DataSetPaginated', function() {
         dataSet.resources = list;
         expect(dataSet.length).to.eql(count);
         
-        var paginated = dataSet.getAdapter(DataSetPagination);
+        var paginated = dataSet.getAdapter(DataSetPaginated);
         expect(!!paginated).to.be(true);
-        
         expect(paginated.pageSize).to.eql(pageSize);
         let pageIdx = 5;
         paginated.pageIdx = pageIdx;

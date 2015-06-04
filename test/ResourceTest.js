@@ -36,21 +36,21 @@ describe('Resource', function() {
     });
     it('Should provide a system type key if the type is not defined', function() {
         let resource = new Resource({adapters});
-        expect(Symbol.keyFor(resource.type)).to.eql('Object/Adapter/Adaptable/Resource');
+        expect(resource.type.key).to.eql('Object/Adapter/Adaptable/Resource');
         resource.data = { type : 'MyType' }
-        expect(Symbol.keyFor(resource.getTypeKey())).to.eql('MyType');
-        expect(Symbol.keyFor(resource.type)).to.eql('MyType');
+        expect(resource.getTypeKey().key).to.eql('MyType');
+        expect(resource.type.key).to.eql('MyType');
     });
     it('Should give priorities for the type defined in the "properties" field', function() {
         let resource = new Resource({adapters});
         resource.data = { type : 'MyType' };        
-        expect(Symbol.keyFor(resource.type)).to.eql('MyType');
+        expect(resource.type.key).to.eql('MyType');
         expect(resource.data).to.eql({ type : 'MyType' });
         resource.data.properties = {
             type : 'AnotherType',
             msg: 'Hello, world!'
         };
-        expect(Symbol.keyFor(resource.type)).to.eql('AnotherType');
+        expect(resource.type.key).to.eql('AnotherType');
         expect(resource.data).to.eql({
             type : 'MyType',
             properties : {
