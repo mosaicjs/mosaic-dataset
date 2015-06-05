@@ -141,7 +141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _classCallCheck(this, Resource);
 
 	        (_get2 = _get(Object.getPrototypeOf(Resource.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
-	        this.data = options.data;
+	        this.data = options ? options.data : undefined;
 	    }
 
 	    _inherits(Resource, _Adaptable);
@@ -317,6 +317,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _mosaicIntents = __webpack_require__(4);
 
+	var _mosaicAdapters = __webpack_require__(2);
+
 	var _Resource2 = __webpack_require__(1);
 
 	var _Resource3 = _interopRequireDefault(_Resource2);
@@ -340,6 +342,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        (_get2 = _get(Object.getPrototypeOf(DataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        (0, _mosaicIntents.Intents)(this);
 	        this.options = options || {};
+	        if (!this.adapters) {
+	            this.adapters = new _mosaicAdapters.AdapterManager();
+	        }
 	        this.resources = this.options.resources;
 	    }
 
@@ -391,6 +396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this._resources[pos] = r;
 	                    this._index[r.id] = [r, pos];
 	                }
+	                return true;
 	            });
 	        }
 	    }, {
@@ -433,6 +439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var r = this._wrap(d);
 	                this._resources[pos] = r;
 	                this._index[r.id] = [r, pos];
+	                return true;
 	            });
 	        }
 	    }, {
@@ -567,8 +574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function update(action) {
 	            return this.action('update', function (intent) {
-	                action.call(this);
-	                return true;
+	                return action.call(this);
 	            });
 	        }
 	    }, {
@@ -583,6 +589,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var ResourceType = this.ResourceType;
 	            if (!(data instanceof ResourceType)) {
 	                resource = new ResourceType({
+	                    dataSet: this,
 	                    adapters: this.adapters,
 	                    data: data
 	                });

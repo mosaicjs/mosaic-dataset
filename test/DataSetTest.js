@@ -1,15 +1,13 @@
 import expect from 'expect.js';
-import { AdapterManager } from 'mosaic-adapters';
 import { DataSet } from '..';
 
 describe('DataSet', function() {
-    let adapters = new AdapterManager();
     function check(first, second){
         expect(JSON.stringify(first)).to.eql(JSON.stringify(second));
     }
     
     it('should add/remove entities one-by-one', function(done) {
-        let dataSet = new DataSet({adapters});
+        let dataSet = new DataSet();
         let index = {};
         let list = [];
         let count = 1000;
@@ -64,7 +62,7 @@ describe('DataSet', function() {
         done();
     });
     it('should add/remove entities by batch', function(done) {
-        let dataSet = new DataSet({adapters});
+        let dataSet = new DataSet();
         let index = {};
         let list = []; 
         let count = 1000;
@@ -115,12 +113,12 @@ describe('DataSet', function() {
             }
             return list;
         }
-        let dataSet = new DataSet({adapters,data:{id:'root',title:'Root'}});
-        let a = new DataSet({adapters, data:{id: 'a', title: 'First folder'}});
+        let dataSet = new DataSet({data:{id:'root',title:'Root'}});
+        let a = new DataSet({dataSet, data:{id: 'a', title: 'First folder'}});
         a.resources = newItems(5);
-        let b = new DataSet({adapters, data:{id: 'b', title: 'Folder two'}});
+        let b = new DataSet({dataSet, data:{id: 'b', title: 'Folder two'}});
         b.resources = newItems(10);
-        let c = new DataSet({adapters, data:{id: 'c', title: 'Folder three'}});
+        let c = new DataSet({dataSet, data:{id: 'c', title: 'Folder three'}});
         c.resources = newItems(5);
         
         let list = [a, b, c].concat(newItems(5));
