@@ -147,16 +147,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(Resource, _Adaptable);
 
 	    _createClass(Resource, [{
-	        key: 'type',
-
-	        /**
-	         * Returns the type key for this resource. This is a shortcut for the
-	         * "getTypeKey" method.
-	         */
-	        get: function () {
-	            return this.getTypeKey();
-	        }
-	    }, {
 	        key: 'getTypeKey',
 
 	        /**
@@ -171,40 +161,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                type = _mosaicAdapters.TypeKey.getTypeKey.apply(this);
 	            }
 	            return type;
-	        }
-	    }, {
-	        key: 'data',
-
-	        /**
-	         * Returns the internal data managed by this resource.
-	         */
-	        get: function () {
-	            return this._data;
-	        },
-
-	        /**
-	         * Associates a new data object with this resource.
-	         */
-	        set: function (d) {
-	            this._data = d || {};
-	            delete this._id;
-	            return this._data;
-	        }
-	    }, {
-	        key: 'id',
-
-	        /**
-	         * Returns the resource identifier. By default this method seeks the
-	         * identifier in the "id" field of the underlying data object. If there is
-	         * no such an identifier then this method generates a local ID stored in
-	         * this resource object.
-	         */
-	        get: function () {
-	            var id = this.data.id;
-	            if (id === undefined) {
-	                id = this._id = this._id || idCounter++;
-	            }
-	            return id;
 	        }
 	    }, {
 	        key: 'get',
@@ -279,6 +235,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (visitor.after) {
 	                visitor.after.call(visitor, this);
 	            }
+	        }
+	    }, {
+	        key: 'type',
+
+	        /**
+	         * Returns the type key for this resource. This is a shortcut for the
+	         * "getTypeKey" method.
+	         */
+	        get: function () {
+	            return this.getTypeKey();
+	        }
+	    }, {
+	        key: 'data',
+
+	        /**
+	         * Returns the internal data managed by this resource.
+	         */
+	        get: function () {
+	            return this._data;
+	        },
+
+	        /**
+	         * Associates a new data object with this resource.
+	         */
+	        set: function (d) {
+	            this._data = d || {};
+	            delete this._id;
+	            return this._data;
+	        }
+	    }, {
+	        key: 'id',
+
+	        /**
+	         * Returns the resource identifier. By default this method seeks the
+	         * identifier in the "id" field of the underlying data object. If there is
+	         * no such an identifier then this method generates a local ID stored in
+	         * this resource object.
+	         */
+	        get: function () {
+	            var id = this.data.id;
+	            if (id === undefined) {
+	                id = this._id = this._id || idCounter++;
+	            }
+	            return id;
 	        }
 	    }]);
 
@@ -361,23 +361,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /** Returns an options value. */
 	        value: function _getOptionsValue(key, defaultValue) {
 	            return this.options[key] || defaultValue;
-	        }
-	    }, {
-	        key: 'resources',
-
-	        /**
-	         * Returns a list of all managed resources.
-	         */
-	        get: function () {
-	            return this._resources;
-	        },
-
-	        /**
-	         * Sets new resources. If the specified list contains non-resource instances
-	         * then they are wrapped in the Resource container.
-	         */
-	        set: function (list) {
-	            return this.setResources(list);
 	        }
 	    }, {
 	        key: 'setResources',
@@ -505,15 +488,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this.remove(pos);
 	        }
 	    }, {
-	        key: 'length',
-
-	        /**
-	         * Returns the number of elements in this set.
-	         */
-	        get: function () {
-	            return this.resources.length;
-	        }
-	    }, {
 	        key: 'size',
 
 	        /**
@@ -616,15 +590,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return result;
 	        }
 	    }, {
-	        key: 'ResourceType',
-
-	        /**
-	         * Returns the default type of instances managed by this data set.
-	         */
-	        get: function () {
-	            return _Resource3['default'];
-	        }
-	    }, {
 	        key: 'visit',
 
 	        /**
@@ -649,6 +614,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                visitor.after.call(visitor, this);
 	            }
 	            return result;
+	        }
+	    }, {
+	        key: 'resources',
+
+	        /**
+	         * Returns a list of all managed resources.
+	         */
+	        get: function () {
+	            return this._resources;
+	        },
+
+	        /**
+	         * Sets new resources. If the specified list contains non-resource instances
+	         * then they are wrapped in the Resource container.
+	         */
+	        set: function (list) {
+	            return this.setResources(list);
+	        }
+	    }, {
+	        key: 'length',
+
+	        /**
+	         * Returns the number of elements in this set.
+	         */
+	        get: function () {
+	            return this.resources.length;
+	        }
+	    }, {
+	        key: 'ResourceType',
+
+	        /**
+	         * Returns the default type of instances managed by this data set.
+	         */
+	        get: function () {
+	            return _Resource3['default'];
 	        }
 	    }]);
 
@@ -740,20 +740,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return result;
 	        }
 	    }, {
-	        key: 'dataSet',
-
-	        /** Access to the internal dataset */
-	        set: function (set) {
-	            if (set instanceof _DataSet3['default']) {
-	                this[DATA_SET_KEY] = set;
-	            } else {
-	                delete this[DATA_SET_KEY];
-	            }
-	        },
-	        get: function () {
-	            return this[DATA_SET_KEY];
-	        }
-	    }, {
 	        key: '_onMainDataSetUpdate',
 
 	        /**
@@ -773,6 +759,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function _handleMainDataSetUpdate() {
 	            this.resources = this.dataSet.resources;
+	        }
+	    }, {
+	        key: 'dataSet',
+
+	        /** Access to the internal dataset */
+	        set: function (set) {
+	            if (set instanceof _DataSet3['default']) {
+	                this[DATA_SET_KEY] = set;
+	            } else {
+	                delete this[DATA_SET_KEY];
+	            }
+	        },
+	        get: function () {
+	            return this[DATA_SET_KEY];
 	        }
 	    }]);
 
@@ -881,16 +881,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(DataSetPaginated, _DerivativeDataSet);
 
 	    _createClass(DataSetPaginated, [{
-	        key: 'pagePos',
-
-	        // ----------------------------------------------------------------------
-
-	        /** Returns position of the first element visible in the page */
-	        get: function () {
-	            var result = this.pageIdx * this.pageSize;
-	            return result;
-	        }
-	    }, {
 	        key: 'focusPos',
 
 	        /**
@@ -902,21 +892,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            idx = Math.max(0, Math.min(this.dataSet.length - 1, idx));
 	            var pageIdx = Math.floor(idx / this.pageSize);
 	            return this.setPageIdx(pageIdx);
-	        }
-	    }, {
-	        key: 'pageIdx',
-
-	        // ----------------------------------------------------------------------
-	        // Page index
-
-	        /** Returns the index of the currently active page. */
-	        get: function () {
-	            return this._pageIdx || 0;
-	        },
-
-	        /** Sets a new page index */
-	        set: function (pageIdx) {
-	            this.setPageIdx(pageIdx);
 	        }
 	    }, {
 	        key: 'setPageIdx',
@@ -936,6 +911,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	                resources.push(resource);
 	            }
 	            return this.setResources(resources);
+	        }
+	    }, {
+	        key: '_onMainDataSetUpdate',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Updates the list */
+	        value: function _onMainDataSetUpdate(intent) {
+	            return intent.then((function () {
+	                return this.pageSize = this.pageSize;
+	            }).bind(this));
+	        }
+	    }, {
+	        key: 'pagePos',
+
+	        // ----------------------------------------------------------------------
+
+	        /** Returns position of the first element visible in the page */
+	        get: function () {
+	            var result = this.pageIdx * this.pageSize;
+	            return result;
+	        }
+	    }, {
+	        key: 'pageIdx',
+
+	        // ----------------------------------------------------------------------
+	        // Page index
+
+	        /** Returns the index of the currently active page. */
+	        get: function () {
+	            return this._pageIdx || 0;
+	        },
+
+	        /** Sets a new page index */
+	        set: function (pageIdx) {
+	            this.setPageIdx(pageIdx);
 	        }
 	    }, {
 	        key: 'pageSize',
@@ -961,17 +972,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /** Returns the total page number in this data set. */
 	        get: function () {
 	            return Math.ceil(this.dataSet.length / this.pageSize);
-	        }
-	    }, {
-	        key: '_onMainDataSetUpdate',
-
-	        // ----------------------------------------------------------------------
-
-	        /** Updates the list */
-	        value: function _onMainDataSetUpdate(intent) {
-	            return intent.then((function () {
-	                return this.pageSize = this.pageSize;
-	            }).bind(this));
 	        }
 	    }]);
 
