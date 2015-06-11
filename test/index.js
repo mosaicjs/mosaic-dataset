@@ -8,3 +8,4 @@ require('./DataSetTest');
 require('./DerivativeDataSetTest');
 require('./DataSetFilteredTest');
 require('./DataSetPaginatedTest');
+require('./DataSetSelectionTest');
