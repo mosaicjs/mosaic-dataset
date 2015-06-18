@@ -1,6 +1,6 @@
 {
   "name": "mosaic-dataset",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Datasets implementation for ES6",
   "main": "index.js",
   "scripts": {
