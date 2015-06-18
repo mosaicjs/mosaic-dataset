@@ -442,6 +442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Performs an update action on this dataset
 	         */
 	        value: function update(action) {
+	            this.version = (this.version || 0) + 1;
 	            return this.action('update', function (intent) {
 	                return action.call(this);
 	            });
