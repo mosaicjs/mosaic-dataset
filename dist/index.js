@@ -840,7 +840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * This method is called when the parent dataset is updated.
 	         */
 	        value: function _onMainDataSetUpdate(intent) {
-	            intent.then((function () {
+	            intent.after((function () {
 	                return this._handleMainDataSetUpdate();
 	            }).bind(this));
 	        }
@@ -952,15 +952,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this.setResources(resources);
 	        }
 	    }, {
-	        key: '_onMainDataSetUpdate',
+	        key: '_handleMainDataSetUpdate',
 
 	        // ----------------------------------------------------------------------
 
 	        /** Updates the list */
-	        value: function _onMainDataSetUpdate(intent) {
-	            return intent.then((function () {
-	                return this.pageSize = this.pageSize;
-	            }).bind(this));
+	        value: function _handleMainDataSetUpdate() {
+	            return this.pageSize = this.pageSize;
 	        }
 	    }, {
 	        key: 'pagePos',
