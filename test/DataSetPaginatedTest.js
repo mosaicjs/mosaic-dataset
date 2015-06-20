@@ -4,7 +4,7 @@ import { AdapterManager } from 'mosaic-adapters';
 import { DataSet, DataSetPaginated, registerDataSetAdapters } from '..';
 
 describe('DataSetPaginated', function() {
-    it('should give access to individual paged resources', function(){
+    it('should give access to individual paged data items', function(){
         let adapters = new AdapterManager();
         registerDataSetAdapters(adapters);
         
@@ -18,7 +18,7 @@ describe('DataSetPaginated', function() {
                 msg: 'item - ' + i
             });
         }
-        dataSet.resources = list;
+        dataSet.items = list;
         expect(dataSet.length).to.eql(count);
         
         var paginated = dataSet.getAdapter(DataSetPaginated);
@@ -30,10 +30,10 @@ describe('DataSetPaginated', function() {
         expect(paginated.pagePos).to.be(pageIdx * pageSize);
         expect(paginated.length).to.be(pageSize);
         for (let i = 0; i < pageSize; i++) {
-            let resource = paginated.resources[i];
-            expect(!!resource).to.be(true);
-            expect(resource instanceof dataSet.ResourceType).to.be(true);
-            expect(resource.data).to.be(list[i + pageIdx * pageSize]);
+            let item = paginated.items[i];
+            expect(!!item).to.be(true);
+            expect(item instanceof dataSet.DataType).to.be(true);
+            expect(item.data).to.be(list[i + pageIdx * pageSize]);
         }
         
         let lastPageIdx = Math.floor(count / pageSize);

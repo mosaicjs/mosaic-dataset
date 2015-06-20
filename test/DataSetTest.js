@@ -28,7 +28,7 @@ describe('DataSet', function() {
         report('Load ' + count + ' objects by position and by their index', function(){
             let positions = [];
             for (let i = 0; i < list.length; i++) {
-                let r1 = dataSet.resources[i];
+                let r1 = dataSet.items[i];
                 if (!r1) expect().fail();
                 if (r1.data !== list[i]) expect().fail();
 
@@ -77,29 +77,29 @@ describe('DataSet', function() {
             }
         });
         report('Set ' + count + ' objects in a DataSet', function(){
-            dataSet.resources = list;
+            dataSet.items = list;
         });
         expect(dataSet.size()).to.eql(count);
         expect(dataSet.length).to.eql(count);
         
         for (let id in index) {
             let data = index[id];
-            let resource = dataSet.byId(id);
-            if (resource.data !== data) expect().fail();
+            let item = dataSet.byId(id);
+            if (item.data !== data) expect().fail();
         }
         
         for (let i = 0; i < count; i++) {
             let data = index['id-' + i];
-            let resource1 = dataSet.get(i);
-            if (!resource1) expect().fail();
-            if (resource1.data !== data) expect().fail();
-            let resource2 = dataSet.resources[i];
-            if (resource2 !== resource1) expect().fail();
+            let item1 = dataSet.get(i);
+            if (!item1) expect().fail();
+            if (item1.data !== data) expect().fail();
+            let item2 = dataSet.items[i];
+            if (item2 !== item1) expect().fail();
         }
         done();
     });
     
-    it('should visit all resources', function(){
+    it('should visit all items', function(){
         let counter = 0;
         function newItems(number) {
             let list = []; 
@@ -115,14 +115,14 @@ describe('DataSet', function() {
         }
         let dataSet = new DataSet({data:{id:'root',title:'Root'}});
         let a = new DataSet({dataSet, data:{id: 'a', title: 'First folder'}});
-        a.resources = newItems(5);
+        a.items = newItems(5);
         let b = new DataSet({dataSet, data:{id: 'b', title: 'Folder two'}});
-        b.resources = newItems(10);
+        b.items = newItems(10);
         let c = new DataSet({dataSet, data:{id: 'c', title: 'Folder three'}});
-        c.resources = newItems(5);
+        c.items = newItems(5);
         
         let list = [a, b, c].concat(newItems(5));
-        dataSet.resources = list;
+        dataSet.items = list;
         
         let str = '';
         dataSet.visit({

@@ -6,7 +6,7 @@ import { DataSet, DataSetSelection } from '..';
 describe('DataSetSelection', function() {
     let adapters = new AdapterManager();
 
-    function generateResources(count){
+    function generateDataItems(count){
         let list = [];
         count = count || 0;
         for (let i = 0; i < count; i++) {
@@ -21,7 +21,7 @@ describe('DataSetSelection', function() {
     
     function newDataSet(count){
         let dataSet = new DataSet({adapters});
-        dataSet.resources = generateResources(count);
+        dataSet.items = generateDataItems(count);
         return dataSet;
     }
     
@@ -39,7 +39,7 @@ describe('DataSetSelection', function() {
         expect(selection.length).to.be(0);
     });
 
-    it('should be able to select a subset of resource elements', function() {
+    it('should be able to select a subset of items', function() {
         let count = 100;
         let dataSet = newDataSet(count);
         let selection = dataSet.getAdapter(DataSetSelection);
@@ -49,14 +49,14 @@ describe('DataSetSelection', function() {
         expect(selection.length).to.be(0);
         selection.select(list);
         expect(selection.length).to.be(count / 4);
-        expect(selection.resources).to.eql(list);
+        expect(selection.items).to.eql(list);
         
         selection.select([]);
         expect(selection.length).to.be(0);
-        expect(selection.resources).to.eql([]);
+        expect(selection.items).to.eql([]);
     });
    
-    it('the method "selected" should return <code>true</code> for all selected resources', function() {
+    it('the method "selected" should return <code>true</code> for all selected items', function() {
         let count = 100;
         let dataSet = newDataSet(count);
         let selection = dataSet.getAdapter(DataSetSelection);

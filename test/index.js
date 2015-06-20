@@ -3,7 +3,7 @@ require("babel/register")({
     // an array of strings to be explicitly matched or a regex / glob
     ignore : false
 });
-require('./ResourceTest');
+require('./DataTest');
 require('./DataSetTest');
 require('./DerivativeDataSetTest');
 require('./DataSetFilteredTest');

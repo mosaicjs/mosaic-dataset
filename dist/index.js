@@ -62,9 +62,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _libResource = __webpack_require__(5);
+	var _libData = __webpack_require__(5);
 
-	var _libResource2 = _interopRequireDefault(_libResource);
+	var _libData2 = _interopRequireDefault(_libData);
 
 	var _libDataSet = __webpack_require__(2);
 
@@ -87,7 +87,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _libDataSetSelection2 = _interopRequireDefault(_libDataSetSelection);
 
 	exports['default'] = {
-	    Resource: _libResource2['default'],
+	    Data: _libData2['default'],
 	    DataSet: _libDataSet2['default'],
 	    DerivativeDataSet: _libDerivativeDataSet2['default'],
 	    DataSetFiltered: _libDataSetFiltered2['default'],
@@ -143,9 +143,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _handleMainDataSetUpdate() {
 	            var filter = this._getOptionsValue('filter');
 	            if (filter) {
-	                this.resources = this.dataSet.resources.filter(filter, this);
+	                this.items = this.dataSet.items.filter(filter, this);
 	            } else {
-	                this.resources = this.dataSet.resources;
+	                this.items = this.dataSet.items;
 	            }
 	        }
 	    }]);
@@ -181,15 +181,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _mosaicAdapters = __webpack_require__(4);
 
-	var _Resource2 = __webpack_require__(5);
+	var _Data2 = __webpack_require__(5);
 
-	var _Resource3 = _interopRequireDefault(_Resource2);
+	var _Data3 = _interopRequireDefault(_Data2);
 
-	var DataSet = (function (_Resource) {
+	var DataSet = (function (_Data) {
 
 	    /**
-	     * Class constructor. It defines resource array and registers event
-	     * listeners updating internal resource indexes.
+	     * Class constructor. It defines data array and registers event listeners
+	     * updating internal data indexes.
 	     */
 
 	    function DataSet(options) {
@@ -207,10 +207,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!this.adapters) {
 	            this.adapters = new _mosaicAdapters.AdapterManager();
 	        }
-	        this.resources = this.options.resources;
+	        this.items = this.options.items;
 	    }
 
-	    _inherits(DataSet, _Resource);
+	    _inherits(DataSet, _Data);
 
 	    _createClass(DataSet, [{
 	        key: 'close',
@@ -225,20 +225,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this.options[key] || defaultValue;
 	        }
 	    }, {
-	        key: 'setResources',
+	        key: 'setItems',
 
 	        /**
-	         * Sets new resources. If the specified list contains non-resource instances
-	         * then they are wrapped in the Resource container.
+	         * Sets a list of new data items. If the specified list contains
+	         * non-Data instances then they are wrapped in a Data container.
 	         */
-	        value: function setResources(list) {
+	        value: function setItems(items) {
 	            return this.update(function () {
-	                this._resources = [];
+	                this._items = [];
 	                this._index = {};
-	                var len = list ? list.length || 0 : 0;
+	                var len = items ? items.length || 0 : 0;
 	                for (var pos = 0; pos < len; pos++) {
-	                    var r = this._wrap(list[pos]);
-	                    this._resources[pos] = r;
+	                    var r = this._wrap(items[pos]);
+	                    this._items[pos] = r;
 	                    this._index[r.id] = [r, pos];
 	                }
 	                return true;
@@ -249,18 +249,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Returns an entity from the specified position. Basically it returns value
-	         * this.resources[pos].
+	         * this.items[pos].
 	         */
 	        value: function get(pos) {
-	            var resources = this.resources;
-	            if (pos < 0 || pos >= resources.length) return;
-	            return resources[pos];
+	            var items = this.items;
+	            if (pos < 0 || pos >= items.length) return;
+	            return items[pos];
 	        }
 	    }, {
 	        key: 'has',
 
 	        /**
-	         * Returns <code>true</code> if the specified resource exists in this
+	         * Returns <code>true</code> if the specified item exists in this
 	         * dataset.
 	         */
 	        value: function has(d) {
@@ -275,15 +275,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function set(d, pos) {
 	            return this.update(function () {
 	                if (pos === undefined) {
-	                    pos = this._resources.length;
+	                    pos = this._items.length;
 	                }
-	                pos = Math.max(0, Math.min(this._resources.length, +pos));
-	                var prev = this._resources[pos];
+	                pos = Math.max(0, Math.min(this._items.length, +pos));
+	                var prev = this._items[pos];
 	                if (prev) {
 	                    delete this._index[prev[0].id];
 	                }
 	                var r = this._wrap(d);
-	                this._resources[pos] = r;
+	                this._items[pos] = r;
 	                this._index[r.id] = [r, pos];
 	                return true;
 	            });
@@ -292,7 +292,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'add',
 
 	        /**
-	         * Adds a new resource at the end of the list.
+	         * Adds a new data item at the end of the list.
 	         */
 	        value: function add(d) {
 	            return this.set(d, this.size());
@@ -301,7 +301,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'pos',
 
 	        /**
-	         * Returns position (index) of the specified resource.
+	         * Returns position (index) of the specified data item.
 	         */
 	        value: function pos(d) {
 	            if (!d) return -1;
@@ -320,29 +320,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'slice',
 
 	        /**
-	         * Returns an array containing the specified number of resources starting
+	         * Returns an array containing the specified number of items starting
 	         * from the given position.
 	         */
 	        value: function slice(first, last) {
-	            return this._resources.slice(first, last);
+	            return this._items.slice(first, last);
 	        }
 	    }, {
 	        key: 'remove',
 
 	        /**
-	         * Removes a resource from the specified position
+	         * Removes a data item from the specified position
 	         */
 	        value: function remove(pos) {
 	            return this.update(function () {
-	                var resources = this._resources;
-	                if (pos === undefined || pos < 0 || pos >= resources.length) {
+	                var items = this._items;
+	                if (pos === undefined || pos < 0 || pos >= items.length) {
 	                    return false;
 	                }
-	                var r = resources[pos];
+	                var r = items[pos];
 	                delete this._index[r.id];
-	                resources.splice(pos, 1);
-	                for (var i = pos; i < resources.length; i++) {
-	                    var _r = resources[i];
+	                items.splice(pos, 1);
+	                for (var i = pos; i < items.length; i++) {
+	                    var _r = items[i];
 	                    var slot = this._index[_r.id];
 	                    if (!slot) throw new Error('DataSet index is broken');
 	                    slot[1]--;
@@ -354,7 +354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'removeById',
 
 	        /**
-	         * Removes an resource corresponding to the specified identifier.
+	         * Removes a data item corresponding to the specified identifier.
 	         */
 	        value: function removeById(id) {
 	            var pos = this.posById(id);
@@ -365,16 +365,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Returns the size of this set (length of the underlying array with
-	         * resources).
+	         * items).
 	         */
 	        value: function size() {
-	            return this.resources.length;
+	            return this.items.length;
 	        }
 	    }, {
 	        key: 'byId',
 
 	        /**
-	         * Returns a resource by its identifier.
+	         * Returns a data item by its identifier.
 	         */
 	        value: function byId(id) {
 	            var slot = this._index[id];
@@ -386,50 +386,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // ----------------------------------------------------------------------
 
 	        /**
-	         * Iterates over all resources and calls the specified visitor function in
+	         * Iterates over all items and calls the specified visitor function in
 	         * the given context. If the specified visitor function returns
 	         * <code>false</code> then the iteration processes stops.
 	         */
 	        value: function each(visitor, context) {
-	            return this.resources.forEach(visitor, context);
+	            return this.items.forEach(visitor, context);
 	        }
 	    }, {
 	        key: 'map',
 
 	        /**
-	         * Calls the specified visitor function with each resource in the list and
+	         * Calls the specified visitor function with each item in the list and
 	         * returns a list of results. If the visitor returns an undefined value then
 	         * it is not added to the resulting list.
 	         */
 	        value: function map(visitor, context) {
-	            return this.resources.map(visitor, context);
+	            return this.items.map(visitor, context);
 	        }
 	    }, {
 	        key: 'filter',
 
 	        /**
-	         * Calls the specified visitor function with each resource in the list and
+	         * Calls the specified visitor function with each item in the list and
 	         * returns a list of results. If the visitor returns an undefined value then
 	         * it is not added to the resulting list.
 	         */
 	        value: function filter(visitor, context) {
-	            return this.resources.filter(visitor, context);
+	            return this.items.filter(visitor, context);
 	        }
 	    }, {
 	        key: 'find',
 
 	        /**
-	         * Iterates over all resources until the specified visitor method returns a
+	         * Iterates over all data items until the specified visitor method returns a
 	         * non-empty result. This method returns the first non-empty visitor result
 	         * or <code>undefined</code> if the visitor returns empty results for all
-	         * resources.
+	         * items.
 	         */
 	        value: function find(visitor, context) {
-	            var resources = this.resources;
+	            var items = this.items;
 	            var result = false;
 	            context = context || this;
-	            for (var i = 0, len = resources.length; !result && i < len; i++) {
-	                result = visitor.call(context, resources[i], i);
+	            for (var i = 0, len = items.length; !result && i < len; i++) {
+	                result = visitor.call(context, items[i], i);
 	            }
 	            return result;
 	        }
@@ -452,19 +452,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * Checks that the specified object has a good type. Otherwise it wraps it
-	         * in a Resource instance.
+	         * in a Data instance.
 	         */
 	        value: function _wrap(data) {
-	            var resource = data;
-	            var ResourceType = this.ResourceType;
-	            if (!(data instanceof ResourceType)) {
-	                resource = new ResourceType({
+	            var item = data;
+	            var DataType = this.DataType;
+	            if (!(data instanceof DataType)) {
+	                item = new DataType({
 	                    dataSet: this,
 	                    adapters: this.adapters,
 	                    data: data
 	                });
 	            }
-	            return resource;
+	            return item;
 	        }
 	    }, {
 	        key: 'createNew',
@@ -482,19 +482,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                options.adapters = this.adapters;
 	            }
 	            var result = new (_bind.apply(Type, [null].concat([options], args)))();
-	            Type.Resource = this.Resource;
+	            Type.Data = this.Data;
 	            return result;
 	        }
 	    }, {
 	        key: 'visit',
 
 	        /**
-	         * Visits this resource
+	         * Visits this items
 	         * 
 	         * @param visitor.before
-	         *            this method is called before this resource is visited
+	         *            this method is called before this item is visited
 	         * @param visitor.after
-	         *            this method is called after this resource is visited
+	         *            this method is called after this item is visited
 	         */
 	        value: function visit(visitor) {
 	            var result;
@@ -502,8 +502,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                result = visitor.before.call(visitor, this);
 	            }
 	            if (result !== 'false') {
-	                this.each(function (resource) {
-	                    return resource.visit(visitor);
+	                this.each(function (item) {
+	                    return item.visit(visitor);
 	                });
 	            }
 	            if (visitor.after) {
@@ -512,21 +512,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return result;
 	        }
 	    }, {
-	        key: 'resources',
+	        key: 'items',
 
 	        /**
-	         * Returns a list of all managed resources.
+	         * Returns a list of all managed data.
 	         */
 	        get: function () {
-	            return this._resources;
+	            return this._items;
 	        },
 
 	        /**
-	         * Sets new resources. If the specified list contains non-resource instances
-	         * then they are wrapped in the Resource container.
+	         * Sets a new list of data items. If the specified list contains non Data
+	         * instances then they are wrapped in a Data container.
 	         */
-	        set: function (list) {
-	            return this.setResources(list);
+	        set: function (items) {
+	            return this.setItems(items);
 	        }
 	    }, {
 	        key: 'length',
@@ -535,21 +535,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Returns the number of elements in this set.
 	         */
 	        get: function () {
-	            return this.resources.length;
+	            return this.items.length;
 	        }
 	    }, {
-	        key: 'ResourceType',
+	        key: 'DataType',
 
 	        /**
 	         * Returns the default type of instances managed by this data set.
 	         */
 	        get: function () {
-	            return _Resource3['default'];
+	            return _Data3['default'];
 	        }
 	    }]);
 
 	    return DataSet;
-	})(_Resource3['default']);
+	})(_Data3['default']);
 
 	exports['default'] = DataSet;
 
@@ -593,37 +593,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * 
 	 */
 
-	var Resource = (function (_Adaptable) {
+	var Data = (function (_Adaptable) {
 
 	    /**
-	     * This constructor initializes this resource and sets the internal data.
+	     * This constructor initializes this wrapper and sets the internal data.
 	     * 
 	     * @param options.adapters
-	     *            an adapter manager used to generate resource adapters
+	     *            an adapter manager used to generate data adapters
 	     * @param options.data
 	     *            the data object
 	     */
 
-	    function Resource(options) {
+	    function Data(options) {
 	        var _get2;
 
 	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	            args[_key - 1] = arguments[_key];
 	        }
 
-	        _classCallCheck(this, Resource);
+	        _classCallCheck(this, Data);
 
-	        (_get2 = _get(Object.getPrototypeOf(Resource.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
+	        (_get2 = _get(Object.getPrototypeOf(Data.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        this.data = options ? options.data : undefined;
 	    }
 
-	    _inherits(Resource, _Adaptable);
+	    _inherits(Data, _Adaptable);
 
-	    _createClass(Resource, [{
+	    _createClass(Data, [{
 	        key: 'getTypeKey',
 
 	        /**
-	         * Returns the type key for this resource.
+	         * Returns the type key for this item.
 	         */
 	        value: function getTypeKey() {
 	            var type = this.get('properties.type') || this.get('type');
@@ -694,12 +694,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'visit',
 
 	        /**
-	         * Visits this resource
+	         * Visits this data object
 	         * 
 	         * @param visitor.before
-	         *            this method is called before this resource is visited
+	         *            this method is called before this data object is visited
 	         * @param visitor.after
-	         *            this method is called after this resource is visited
+	         *            this method is called after this data object is visited
 	         */
 	        value: function visit(visitor) {
 	            if (visitor.before) {
@@ -713,7 +713,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'type',
 
 	        /**
-	         * Returns the type key for this resource. This is a shortcut for the
+	         * Returns the type key for this item. This is a shortcut for the
 	         * "getTypeKey" method.
 	         */
 	        get: function () {
@@ -723,14 +723,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'data',
 
 	        /**
-	         * Returns the internal data managed by this resource.
+	         * Returns the internal data managed by this item.
 	         */
 	        get: function () {
 	            return this._data;
 	        },
 
 	        /**
-	         * Associates a new data object with this resource.
+	         * Associates a new data object with this item.
 	         */
 	        set: function (d) {
 	            this._data = d || {};
@@ -741,10 +741,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'id',
 
 	        /**
-	         * Returns the resource identifier. By default this method seeks the
+	         * Returns this data object identifier. By default this method seeks the
 	         * identifier in the "id" field of the underlying data object. If there is
 	         * no such an identifier then this method generates a local ID stored in
-	         * this resource object.
+	         * this data object.
 	         */
 	        get: function () {
 	            var id = this.data.id;
@@ -755,10 +755,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }]);
 
-	    return Resource;
+	    return Data;
 	})(_mosaicAdapters.Adaptable);
 
-	exports['default'] = Resource;
+	exports['default'] = Data;
 	module.exports = exports['default'];
 
 /***/ },
@@ -853,7 +853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * of objects when the parent set changes.
 	         */
 	        value: function _handleMainDataSetUpdate() {
-	            this.resources = this.dataSet.resources;
+	            this.items = this.dataSet.items;
 	        }
 	    }, {
 	        key: 'dataSet',
@@ -945,12 +945,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            pageIdx = this._pageIdx = Math.max(0, Math.min(pageIdx, this.pageNumber - 1));
 	            var startPos = pageIdx * pageSize;
 	            var endPos = Math.min(size - 1, startPos + pageSize - 1);
-	            var resources = [];
+	            var items = [];
 	            for (var i = startPos; i <= endPos; i++) {
-	                var resource = dataSet.get(i);
-	                resources.push(resource);
+	                var item = dataSet.get(i);
+	                items.push(item);
 	            }
-	            return this.setResources(resources);
+	            return this.setItems(items);
 	        }
 	    }, {
 	        key: '_handleMainDataSetUpdate',
@@ -1059,45 +1059,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(DataSetSelected, [{
 	        key: '_handleMainDataSetUpdate',
 
-	        /** Updates list of selected resources. */
+	        /** Updates list of selected items. */
 	        value: function _handleMainDataSetUpdate() {
-	            var resources = [];
+	            var items = [];
 	            this.dataSet.each(function (r, i) {
 	                if (this.has(r)) {
-	                    resources.push(r);
+	                    items.push(r);
 	                }
 	            }, this);
-	            return this.setResources(resources);
+	            return this.setItems(items);
 	        }
 	    }, {
 	        key: '_getSelectionFilter',
 
 	        /**
 	         * Returns a filter function returning <code>true</code> if a specified
-	         * resource is contained in the specified list of resources.
+	         * item is contained in the specified list.
 	         */
-	        value: function _getSelectionFilter(resources) {
+	        value: function _getSelectionFilter(items) {
 	            var _this = this;
 
 	            var filter = undefined;
-	            if (typeof resources === 'function') {
-	                filter = resources;
-	            } else if (resources instanceof _DataSet2['default']) {
+	            if (typeof items === 'function') {
+	                filter = items;
+	            } else if (items instanceof _DataSet2['default']) {
 	                filter = function (r) {
-	                    return resources.has(r);
+	                    return items.has(r);
 	                };
-	            } else if (resources) {
+	            } else if (items) {
 	                (function () {
-	                    if (!Array.isArray(resources)) {
-	                        resources = [resources];
+	                    if (!Array.isArray(items)) {
+	                        items = [items];
 	                    }
 	                    var index = {};
-	                    for (var key in resources) {
-	                        var r = _this._wrap(resources[key]);
-	                        index[r.id] = key;
+	                    for (var key in items) {
+	                        var item = _this._wrap(items[key]);
+	                        index[item.id] = key;
 	                    }
-	                    filter = function (r) {
-	                        return r.id in index;
+	                    filter = function (item) {
+	                        return item.id in index;
 	                    };
 	                })();
 	            }
@@ -1107,7 +1107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'select',
 
 	        /**
-	         * Selects the specified resources.
+	         * Selects the specified items.
 	         */
 	        value: function select(selection) {
 	            var list = undefined;
@@ -1117,13 +1117,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                list = [];
 	            }
-	            return this.setResources(list);
+	            return this.setItems(list);
 	        }
 	    }, {
 	        key: 'selected',
 
 	        /**
-	         * Returns <code>true</code> if <em>at least one</em> specified resource
+	         * Returns <code>true</code> if <em>at least one</em> specified item
 	         * is contained in this selection data set.
 	         */
 	        value: function selected(selection) {
