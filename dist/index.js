@@ -113,6 +113,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -128,15 +130,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
 	var DataSetFiltered = (function (_DerivativeDataSet) {
+	    _inherits(DataSetFiltered, _DerivativeDataSet);
+
 	    function DataSetFiltered() {
 	        _classCallCheck(this, DataSetFiltered);
 
-	        if (_DerivativeDataSet != null) {
-	            _DerivativeDataSet.apply(this, arguments);
-	        }
+	        _get(Object.getPrototypeOf(DataSetFiltered.prototype), 'constructor', this).apply(this, arguments);
 	    }
-
-	    _inherits(DataSetFiltered, _DerivativeDataSet);
 
 	    _createClass(DataSetFiltered, [{
 	        key: '_handleMainDataSetUpdate',
@@ -169,7 +169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -186,6 +186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Data3 = _interopRequireDefault(_Data2);
 
 	var DataSet = (function (_Data) {
+	    _inherits(DataSet, _Data);
 
 	    /**
 	     * Class constructor. It defines data array and registers event listeners
@@ -195,11 +196,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function DataSet(options) {
 	        var _get2;
 
+	        _classCallCheck(this, DataSet);
+
 	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	            args[_key - 1] = arguments[_key];
 	        }
-
-	        _classCallCheck(this, DataSet);
 
 	        (_get2 = _get(Object.getPrototypeOf(DataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        (0, _mosaicIntents.Intents)(this);
@@ -209,8 +210,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        this.items = this.options.items;
 	    }
-
-	    _inherits(DataSet, _Data);
 
 	    _createClass(DataSet, [{
 	        key: 'close',
@@ -473,14 +472,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Creates and returns a new empty copy of this data set.
 	         */
 	        value: function createNew(options) {
-	            for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	                args[_key2 - 1] = arguments[_key2];
-	            }
-
 	            var Type = this.constructor;
 	            if (!options.adapters) {
 	                options.adapters = this.adapters;
 	            }
+
+	            for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	                args[_key2 - 1] = arguments[_key2];
+	            }
+
 	            var result = new (_bind.apply(Type, [null].concat([options], args)))();
 	            Type.Data = this.Data;
 	            return result;
@@ -517,7 +517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Returns a list of all managed data.
 	         */
-	        get: function () {
+	        get: function get() {
 	            return this._items;
 	        },
 
@@ -525,7 +525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Sets a new list of data items. If the specified list contains non Data
 	         * instances then they are wrapped in a Data container.
 	         */
-	        set: function (items) {
+	        set: function set(items) {
 	            return this.setItems(items);
 	        }
 	    }, {
@@ -534,7 +534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Returns the number of elements in this set.
 	         */
-	        get: function () {
+	        get: function get() {
 	            return this.items.length;
 	        }
 	    }, {
@@ -543,7 +543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Returns the default type of instances managed by this data set.
 	         */
-	        get: function () {
+	        get: function get() {
 	            return _Data3['default'];
 	        }
 	    }]);
@@ -558,13 +558,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
@@ -580,7 +580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -594,6 +594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var Data = (function (_Adaptable) {
+	    _inherits(Data, _Adaptable);
 
 	    /**
 	     * This constructor initializes this wrapper and sets the internal data.
@@ -607,17 +608,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Data(options) {
 	        var _get2;
 
+	        _classCallCheck(this, Data);
+
 	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	            args[_key - 1] = arguments[_key];
 	        }
 
-	        _classCallCheck(this, Data);
-
 	        (_get2 = _get(Object.getPrototypeOf(Data.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        this.data = options ? options.data : undefined;
 	    }
-
-	    _inherits(Data, _Adaptable);
 
 	    _createClass(Data, [{
 	        key: 'getTypeKey',
@@ -716,7 +715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Returns the type key for this item. This is a shortcut for the
 	         * "getTypeKey" method.
 	         */
-	        get: function () {
+	        get: function get() {
 	            return this.getTypeKey();
 	        }
 	    }, {
@@ -725,14 +724,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Returns the internal data managed by this item.
 	         */
-	        get: function () {
+	        get: function get() {
 	            return this._data;
 	        },
 
 	        /**
 	         * Associates a new data object with this item.
 	         */
-	        set: function (d) {
+	        set: function set(d) {
 	            this._data = d || {};
 	            delete this._id;
 	            return this._data;
@@ -746,7 +745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * no such an identifier then this method generates a local ID stored in
 	         * this data object.
 	         */
-	        get: function () {
+	        get: function get() {
 	            var id = this.data.id;
 	            if (id === undefined) {
 	                id = this._id = this._id || idCounter++;
@@ -773,7 +772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -788,14 +787,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	var DATA_SET_KEY = Symbol('_dataSet');
 
 	var DerivativeDataSet = (function (_DataSet) {
+	    _inherits(DerivativeDataSet, _DataSet);
+
 	    function DerivativeDataSet(options) {
 	        var _get2;
+
+	        _classCallCheck(this, DerivativeDataSet);
 
 	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	            args[_key - 1] = arguments[_key];
 	        }
-
-	        _classCallCheck(this, DerivativeDataSet);
 
 	        (_get2 = _get(Object.getPrototypeOf(DerivativeDataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        if (!options) {
@@ -809,8 +810,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dataSet.on('update', this._onMainDataSetUpdate);
 	        this._handleMainDataSetUpdate();
 	    }
-
-	    _inherits(DerivativeDataSet, _DataSet);
 
 	    _createClass(DerivativeDataSet, [{
 	        key: 'close',
@@ -859,14 +858,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'dataSet',
 
 	        /** Access to the internal dataset */
-	        set: function (set) {
-	            if (set instanceof _DataSet3['default']) {
-	                this[DATA_SET_KEY] = set;
+	        set: function set(_set) {
+	            if (_set instanceof _DataSet3['default']) {
+	                this[DATA_SET_KEY] = _set;
 	            } else {
 	                delete this[DATA_SET_KEY];
 	            }
 	        },
-	        get: function () {
+	        get: function get() {
 	            return this[DATA_SET_KEY];
 	        }
 	    }]);
@@ -889,7 +888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -902,23 +901,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
 	var DataSetPaginated = (function (_DerivativeDataSet) {
+	    _inherits(DataSetPaginated, _DerivativeDataSet);
 
 	    /** Initializes this paginated data set. */
 
 	    function DataSetPaginated() {
+	        _classCallCheck(this, DataSetPaginated);
+
 	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	            args[_key] = arguments[_key];
 	        }
-
-	        _classCallCheck(this, DataSetPaginated);
 
 	        _get(Object.getPrototypeOf(DataSetPaginated.prototype), 'constructor', this).apply(this, args);
 	        var page = this._getOptionsValue('page', 0);
 	        this.pageIdx = page;
 	        this.pageSize = this._getOptionsValue('pageSize', 10);
 	    }
-
-	    _inherits(DataSetPaginated, _DerivativeDataSet);
 
 	    _createClass(DataSetPaginated, [{
 	        key: 'focusPos',
@@ -967,7 +965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // ----------------------------------------------------------------------
 
 	        /** Returns position of the first element visible in the page */
-	        get: function () {
+	        get: function get() {
 	            var result = this.pageIdx * this.pageSize;
 	            return result;
 	        }
@@ -978,12 +976,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Page index
 
 	        /** Returns the index of the currently active page. */
-	        get: function () {
+	        get: function get() {
 	            return this._pageIdx || 0;
 	        },
 
 	        /** Sets a new page index */
-	        set: function (pageIdx) {
+	        set: function set(pageIdx) {
 	            this.setPageIdx(pageIdx);
 	        }
 	    }, {
@@ -992,14 +990,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // ----------------------------------------------------------------------
 
 	        /** Sets a new page size */
-	        set: function (pageSize) {
+	        set: function set(pageSize) {
 	            var firstPageItemIdx = this.pagePos;
 	            this._pageSize = pageSize || this.defaultPageSize || 10;
 	            return this.focusPos(firstPageItemIdx);
 	        },
 
 	        /** Returns the current page size */
-	        get: function () {
+	        get: function get() {
 	            return this._pageSize || this._getOptionsValue('pageSize') || this.defaultPageSize;
 	        }
 	    }, {
@@ -1008,7 +1006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // ----------------------------------------------------------------------
 
 	        /** Returns the total page number in this data set. */
-	        get: function () {
+	        get: function get() {
 	            return Math.ceil(this.dataSet.length / this.pageSize);
 	        }
 	    }]);
@@ -1031,6 +1029,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -1046,15 +1046,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
 	var DataSetSelected = (function (_DerivativeDataSet) {
+	    _inherits(DataSetSelected, _DerivativeDataSet);
+
 	    function DataSetSelected() {
 	        _classCallCheck(this, DataSetSelected);
 
-	        if (_DerivativeDataSet != null) {
-	            _DerivativeDataSet.apply(this, arguments);
-	        }
+	        _get(Object.getPrototypeOf(DataSetSelected.prototype), 'constructor', this).apply(this, arguments);
 	    }
-
-	    _inherits(DataSetSelected, _DerivativeDataSet);
 
 	    _createClass(DataSetSelected, [{
 	        key: '_handleMainDataSetUpdate',
