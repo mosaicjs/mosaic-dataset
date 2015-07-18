@@ -185,6 +185,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Data3 = _interopRequireDefault(_Data2);
 
+	var DATA_SET_KEY = Symbol('_dataSet');
+
 	var DataSet = (function (_Data) {
 	    _inherits(DataSet, _Data);
 
@@ -205,10 +207,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        (_get2 = _get(Object.getPrototypeOf(DataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        (0, _mosaicIntents.Intents)(this);
 	        this.options = options || {};
+	        this.items = this.options.items;
+	        if (this.options.DataType) {
+	            // Re-define the type of managed data objects
+	            this.DataType = this.options.DataType;
+	        }
+	        if (this.adaptable && !this.adapters) {
+	            this.adapters = this.adaptable.adapters;
+	        }
+	        var parentDataSet = this.dataSet;
+	        if (parentDataSet) {
+	            // Tries to copy the resource type from the main adaptable instance
+	            this.DataType = parentDataSet.DataType || this.DataType;
+	            if (!this.adapters) {
+	                this.adapters = parentDataSet.adapters;
+	            }
+	        }
 	        if (!this.adapters) {
 	            this.adapters = new _mosaicAdapters.AdapterManager();
 	        }
-	        this.items = this.options.items;
 	    }
 
 	    _createClass(DataSet, [{
@@ -227,8 +244,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'setItems',
 
 	        /**
-	         * Sets a list of new data items. If the specified list contains
-	         * non-Data instances then they are wrapped in a Data container.
+	         * Sets a list of new data items. If the specified list contains non-Data
+	         * instances then they are wrapped in a Data container.
 	         */
 	        value: function setItems(items) {
 	            return this.update(function () {
@@ -259,8 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'has',
 
 	        /**
-	         * Returns <code>true</code> if the specified item exists in this
-	         * dataset.
+	         * Returns <code>true</code> if the specified item exists in this dataset.
 	         */
 	        value: function has(d) {
 	            return this.pos(d) >= 0;
@@ -319,8 +335,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'slice',
 
 	        /**
-	         * Returns an array containing the specified number of items starting
-	         * from the given position.
+	         * Returns an array containing the specified number of items starting from
+	         * the given position.
 	         */
 	        value: function slice(first, last) {
 	            return this._items.slice(first, last);
@@ -363,8 +379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'size',
 
 	        /**
-	         * Returns the size of this set (length of the underlying array with
-	         * items).
+	         * Returns the size of this set (length of the underlying array with items).
 	         */
 	        value: function size() {
 	            return this.items.length;
@@ -385,8 +400,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // ----------------------------------------------------------------------
 
 	        /**
-	         * Iterates over all items and calls the specified visitor function in
-	         * the given context. If the specified visitor function returns
+	         * Iterates over all items and calls the specified visitor function in the
+	         * given context. If the specified visitor function returns
 	         * <code>false</code> then the iteration processes stops.
 	         */
 	        value: function each(visitor, context) {
@@ -512,6 +527,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return result;
 	        }
 	    }, {
+	        key: 'dataSet',
+
+	        /** Access to the internal dataset */
+	        set: function set(_set) {
+	            if (!!_set) {
+	                this[DATA_SET_KEY] = _set;
+	            } else {
+	                delete this[DATA_SET_KEY];
+	            }
+	        },
+	        get: function get() {
+	            if (this[DATA_SET_KEY] === undefined) {
+	                this[DATA_SET_KEY] = this.options.dataSet || this.adaptable;
+	            }
+	            return this[DATA_SET_KEY];
+	        }
+	    }, {
 	        key: 'items',
 
 	        /**
@@ -544,7 +576,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Returns the default type of instances managed by this data set.
 	         */
 	        get: function get() {
-	            return _Data3['default'];
+	            return this._DataType || _Data3['default'];
+	        },
+
+	        /**
+	         * Sets a new type for instances managed by this data set.
+	         */
+	        set: function set(type) {
+	            this._DataType = type;
 	        }
 	    }]);
 
@@ -748,7 +787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        get: function get() {
 	            var id = this.data.id;
 	            if (id === undefined) {
-	                id = this._id = this._id || idCounter++;
+	                id = this._id = this._id || ++idCounter;
 	            }
 	            return id;
 	        }
@@ -784,8 +823,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _DataSet3 = _interopRequireDefault(_DataSet2);
 
-	var DATA_SET_KEY = Symbol('_dataSet');
-
 	var DerivativeDataSet = (function (_DataSet) {
 	    _inherits(DerivativeDataSet, _DataSet);
 
@@ -802,12 +839,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!options) {
 	            throw new Error('Parameters are not defined');
 	        }
-	        var dataSet = this.dataSet = options.dataSet || this.adaptable;
-	        if (!this.adapters && dataSet) {
-	            this.adapters = dataSet.adapters;
-	        }
 	        this._onMainDataSetUpdate = this._onMainDataSetUpdate.bind(this);
-	        dataSet.on('update', this._onMainDataSetUpdate);
+	        this.dataSet.on('update', this._onMainDataSetUpdate);
 	        this._handleMainDataSetUpdate();
 	    }
 
@@ -853,20 +886,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function _handleMainDataSetUpdate() {
 	            this.items = this.dataSet.items;
-	        }
-	    }, {
-	        key: 'dataSet',
-
-	        /** Access to the internal dataset */
-	        set: function set(_set) {
-	            if (_set instanceof _DataSet3['default']) {
-	                this[DATA_SET_KEY] = _set;
-	            } else {
-	                delete this[DATA_SET_KEY];
-	            }
-	        },
-	        get: function get() {
-	            return this[DATA_SET_KEY];
 	        }
 	    }]);
 
@@ -1045,16 +1064,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
-	var DataSetSelected = (function (_DerivativeDataSet) {
-	    _inherits(DataSetSelected, _DerivativeDataSet);
+	var DataSetSelection = (function (_DerivativeDataSet) {
+	    _inherits(DataSetSelection, _DerivativeDataSet);
 
-	    function DataSetSelected() {
-	        _classCallCheck(this, DataSetSelected);
+	    function DataSetSelection() {
+	        _classCallCheck(this, DataSetSelection);
 
-	        _get(Object.getPrototypeOf(DataSetSelected.prototype), 'constructor', this).apply(this, arguments);
+	        _get(Object.getPrototypeOf(DataSetSelection.prototype), 'constructor', this).apply(this, arguments);
 	    }
 
-	    _createClass(DataSetSelected, [{
+	    _createClass(DataSetSelection, [{
 	        key: '_handleMainDataSetUpdate',
 
 	        /** Updates list of selected items. */
@@ -1130,10 +1149,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }]);
 
-	    return DataSetSelected;
+	    return DataSetSelection;
 	})(_DerivativeDataSet3['default']);
 
-	exports['default'] = DataSetSelected;
+	exports['default'] = DataSetSelection;
 	module.exports = exports['default'];
 
 /***/ }
