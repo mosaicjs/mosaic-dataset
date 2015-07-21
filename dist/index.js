@@ -539,7 +539,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        get: function get() {
 	            if (this[DATA_SET_KEY] === undefined) {
-	                this[DATA_SET_KEY] = this.options.dataSet || this.adaptable;
+	                var dataSet = undefined;
+	                if (this.adaptable instanceof DataSet) {
+	                    dataSet = this.adaptable;
+	                } else if (this.options instanceof DataSet) {
+	                    dataSet = this.options;
+	                } else if (this.options.dataSet instanceof DataSet) {
+	                    dataSet = this.options.dataSet;
+	                }
+	                this[DATA_SET_KEY] = dataSet;
 	            }
 	            return this[DATA_SET_KEY];
 	        }
