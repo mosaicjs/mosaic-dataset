@@ -471,7 +471,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _wrap(data) {
 	            var item = data;
 	            var DataType = this.DataType;
-	            if (!(data instanceof DataType)) {
+	            if (!(item instanceof DataType)) {
+	                if (item instanceof _Data3['default']) {
+	                    data = item.data;
+	                }
 	                item = new DataType({
 	                    dataSet: this,
 	                    adapters: this.adapters,
