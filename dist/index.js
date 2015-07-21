@@ -228,18 +228,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 
+	    /** Access to the internal dataset */
+
 	    _createClass(DataSet, [{
 	        key: 'close',
 
 	        /** Do-nothing destructor */
 	        value: function close() {}
-	    }, {
-	        key: '_getOptionsValue',
 
 	        /** Returns an options value. */
+	    }, {
+	        key: '_getOptionsValue',
 	        value: function _getOptionsValue(key, defaultValue) {
 	            return this.options[key] || defaultValue;
 	        }
+
+	        /**
+	         * Returns a list of all managed data.
+	         */
 	    }, {
 	        key: 'setItems',
 
@@ -260,33 +266,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return true;
 	            });
 	        }
-	    }, {
-	        key: 'get',
 
 	        /**
 	         * Returns an entity from the specified position. Basically it returns value
 	         * this.items[pos].
 	         */
+	    }, {
+	        key: 'get',
 	        value: function get(pos) {
 	            var items = this.items;
 	            if (pos < 0 || pos >= items.length) return;
 	            return items[pos];
 	        }
-	    }, {
-	        key: 'has',
 
 	        /**
 	         * Returns <code>true</code> if the specified item exists in this dataset.
 	         */
+	    }, {
+	        key: 'has',
 	        value: function has(d) {
 	            return this.pos(d) >= 0;
 	        }
-	    }, {
-	        key: 'set',
 
 	        /**
 	         * Sets a new value in the specified position
 	         */
+	    }, {
+	        key: 'set',
 	        value: function set(d, pos) {
 	            return this.update(function () {
 	                if (pos === undefined) {
@@ -303,50 +309,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return true;
 	            });
 	        }
-	    }, {
-	        key: 'add',
 
 	        /**
 	         * Adds a new data item at the end of the list.
 	         */
+	    }, {
+	        key: 'add',
 	        value: function add(d) {
 	            return this.set(d, this.size());
 	        }
-	    }, {
-	        key: 'pos',
 
 	        /**
 	         * Returns position (index) of the specified data item.
 	         */
+	    }, {
+	        key: 'pos',
 	        value: function pos(d) {
 	            if (!d) return -1;
 	            d = this._wrap(d);
 	            return this.posById(d.id);
 	        }
-	    }, {
-	        key: 'posById',
 
 	        /** Returns position of the element corresponding to the specified ID. */
+	    }, {
+	        key: 'posById',
 	        value: function posById(id) {
 	            var slot = this._index[id];
 	            return slot ? slot[1] : -1;
 	        }
-	    }, {
-	        key: 'slice',
 
 	        /**
 	         * Returns an array containing the specified number of items starting from
 	         * the given position.
 	         */
+	    }, {
+	        key: 'slice',
 	        value: function slice(first, last) {
 	            return this._items.slice(first, last);
 	        }
-	    }, {
-	        key: 'remove',
 
 	        /**
 	         * Removes a data item from the specified position
 	         */
+	    }, {
+	        key: 'remove',
 	        value: function remove(pos) {
 	            return this.update(function () {
 	                var items = this._items;
@@ -365,16 +371,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return true;
 	            });
 	        }
-	    }, {
-	        key: 'removeById',
 
 	        /**
 	         * Removes a data item corresponding to the specified identifier.
 	         */
+	    }, {
+	        key: 'removeById',
 	        value: function removeById(id) {
 	            var pos = this.posById(id);
 	            return this.remove(pos);
 	        }
+
+	        /**
+	         * Returns the number of elements in this set.
+	         */
 	    }, {
 	        key: 'size',
 
@@ -384,18 +394,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function size() {
 	            return this.items.length;
 	        }
-	    }, {
-	        key: 'byId',
 
 	        /**
 	         * Returns a data item by its identifier.
 	         */
+	    }, {
+	        key: 'byId',
 	        value: function byId(id) {
 	            var slot = this._index[id];
 	            return slot ? slot[0] : undefined;
 	        }
-	    }, {
-	        key: 'each',
 
 	        // ----------------------------------------------------------------------
 
@@ -404,33 +412,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * given context. If the specified visitor function returns
 	         * <code>false</code> then the iteration processes stops.
 	         */
+	    }, {
+	        key: 'each',
 	        value: function each(visitor, context) {
 	            return this.items.forEach(visitor, context);
 	        }
-	    }, {
-	        key: 'map',
 
 	        /**
 	         * Calls the specified visitor function with each item in the list and
 	         * returns a list of results. If the visitor returns an undefined value then
 	         * it is not added to the resulting list.
 	         */
+	    }, {
+	        key: 'map',
 	        value: function map(visitor, context) {
 	            return this.items.map(visitor, context);
 	        }
-	    }, {
-	        key: 'filter',
 
 	        /**
 	         * Calls the specified visitor function with each item in the list and
 	         * returns a list of results. If the visitor returns an undefined value then
 	         * it is not added to the resulting list.
 	         */
+	    }, {
+	        key: 'filter',
 	        value: function filter(visitor, context) {
 	            return this.items.filter(visitor, context);
 	        }
-	    }, {
-	        key: 'find',
 
 	        /**
 	         * Iterates over all data items until the specified visitor method returns a
@@ -438,6 +446,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * or <code>undefined</code> if the visitor returns empty results for all
 	         * items.
 	         */
+	    }, {
+	        key: 'find',
 	        value: function find(visitor, context) {
 	            var items = this.items;
 	            var result = false;
@@ -447,27 +457,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return result;
 	        }
-	    }, {
-	        key: 'update',
 
 	        // ----------------------------------------------------------------------
 
 	        /**
 	         * Performs an update action on this dataset
 	         */
+	    }, {
+	        key: 'update',
 	        value: function update(action) {
 	            this.version = (this.version || 0) + 1;
 	            return this.action('update', function (intent) {
 	                return action.call(this);
 	            });
 	        }
-	    }, {
-	        key: '_wrap',
 
 	        /**
 	         * Checks that the specified object has a good type. Otherwise it wraps it
 	         * in a Data instance.
 	         */
+	    }, {
+	        key: '_wrap',
 	        value: function _wrap(data) {
 	            var item = data;
 	            var DataType = this.DataType;
@@ -480,12 +490,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return item;
 	        }
-	    }, {
-	        key: 'createNew',
 
 	        /**
 	         * Creates and returns a new empty copy of this data set.
 	         */
+	    }, {
+	        key: 'createNew',
 	        value: function createNew(options) {
 	            var Type = this.constructor;
 	            if (!options.adapters) {
@@ -500,6 +510,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            Type.Data = this.Data;
 	            return result;
 	        }
+
+	        /**
+	         * Returns the default type of instances managed by this data set.
+	         */
 	    }, {
 	        key: 'visit',
 
@@ -528,8 +542,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'dataSet',
-
-	        /** Access to the internal dataset */
 	        set: function set(_set) {
 	            if (!!_set) {
 	                this[DATA_SET_KEY] = _set;
@@ -553,10 +565,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'items',
-
-	        /**
-	         * Returns a list of all managed data.
-	         */
 	        get: function get() {
 	            return this._items;
 	        },
@@ -570,19 +578,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'length',
-
-	        /**
-	         * Returns the number of elements in this set.
-	         */
 	        get: function get() {
 	            return this.items.length;
 	        }
 	    }, {
 	        key: 'DataType',
-
-	        /**
-	         * Returns the default type of instances managed by this data set.
-	         */
 	        get: function get() {
 	            return this._DataType || _Data3['default'];
 	        },
@@ -665,6 +665,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.data = options ? options.data : undefined;
 	    }
 
+	    /**
+	     * Returns the type key for this item. This is a shortcut for the
+	     * "getTypeKey" method.
+	     */
+
 	    _createClass(Data, [{
 	        key: 'getTypeKey',
 
@@ -681,6 +686,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return type;
 	        }
+
+	        /**
+	         * Returns the internal data managed by this item.
+	         */
 	    }, {
 	        key: 'get',
 
@@ -705,12 +714,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return i === len ? data : null;
 	        }
-	    }, {
-	        key: 'set',
 
 	        /**
 	         * Sets a new value for the specified path.
 	         */
+	    }, {
+	        key: 'set',
 	        value: function set(path, value) {
 	            if (typeof path === 'string') {
 	                var array = path.split('.');
@@ -736,8 +745,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return this;
 	        }
-	    }, {
-	        key: 'visit',
 
 	        /**
 	         * Visits this data object
@@ -747,6 +754,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param visitor.after
 	         *            this method is called after this data object is visited
 	         */
+	    }, {
+	        key: 'visit',
 	        value: function visit(visitor) {
 	            if (visitor.before) {
 	                visitor.before.call(visitor, this);
@@ -757,20 +766,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'type',
-
-	        /**
-	         * Returns the type key for this item. This is a shortcut for the
-	         * "getTypeKey" method.
-	         */
 	        get: function get() {
 	            return this.getTypeKey();
 	        }
 	    }, {
 	        key: 'data',
-
-	        /**
-	         * Returns the internal data managed by this item.
-	         */
 	        get: function get() {
 	            return this._data;
 	        },
@@ -786,8 +786,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            delete this._id;
 	            return this._data;
 	        }
-	    }, {
-	        key: 'id',
 
 	        /**
 	         * Returns this data object identifier. By default this method seeks the
@@ -795,6 +793,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * no such an identifier then this method generates a local ID stored in
 	         * this data object.
 	         */
+	    }, {
+	        key: 'id',
 	        get: function get() {
 	            var id = this.data.id;
 	            if (id === undefined) {
@@ -863,10 +863,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            dataSet.off('update', this._onMainDataSetUpdate);
 	            delete this._dataSet;
 	        }
-	    }, {
-	        key: '_getOptionsValue',
 
 	        /** Returns an options value. */
+	    }, {
+	        key: '_getOptionsValue',
 	        value: function _getOptionsValue(key, defaultValue) {
 	            var result = _get(Object.getPrototypeOf(DerivativeDataSet.prototype), '_getOptionsValue', this).call(this, key);
 	            if (!result) {
@@ -877,24 +877,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return result;
 	        }
-	    }, {
-	        key: '_onMainDataSetUpdate',
 
 	        /**
 	         * This method is called when the parent dataset is updated.
 	         */
+	    }, {
+	        key: '_onMainDataSetUpdate',
 	        value: function _onMainDataSetUpdate(intent) {
 	            intent.after((function () {
 	                return this._handleMainDataSetUpdate();
 	            }).bind(this));
 	        }
-	    }, {
-	        key: '_handleMainDataSetUpdate',
 
 	        /**
 	         * This method should be overloaded in subclasses to define exact behaveour
 	         * of objects when the parent set changes.
 	         */
+	    }, {
+	        key: '_handleMainDataSetUpdate',
 	        value: function _handleMainDataSetUpdate() {
 	            this.items = this.dataSet.items;
 	        }
@@ -948,6 +948,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.pageSize = this._getOptionsValue('pageSize', 10);
 	    }
 
+	    // ----------------------------------------------------------------------
+
+	    /** Returns position of the first element visible in the page */
+
 	    _createClass(DataSetPaginated, [{
 	        key: 'focusPos',
 
@@ -961,6 +965,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var pageIdx = Math.floor(idx / this.pageSize);
 	            return this.setPageIdx(pageIdx);
 	        }
+
+	        // ----------------------------------------------------------------------
+	        // Page index
+
+	        /** Returns the index of the currently active page. */
 	    }, {
 	        key: 'setPageIdx',
 
@@ -980,6 +989,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return this.setItems(items);
 	        }
+
+	        // ----------------------------------------------------------------------
+
+	        /** Sets a new page size */
 	    }, {
 	        key: '_handleMainDataSetUpdate',
 
@@ -991,21 +1004,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'pagePos',
-
-	        // ----------------------------------------------------------------------
-
-	        /** Returns position of the first element visible in the page */
 	        get: function get() {
 	            var result = this.pageIdx * this.pageSize;
 	            return result;
 	        }
 	    }, {
 	        key: 'pageIdx',
-
-	        // ----------------------------------------------------------------------
-	        // Page index
-
-	        /** Returns the index of the currently active page. */
 	        get: function get() {
 	            return this._pageIdx || 0;
 	        },
@@ -1016,10 +1020,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'pageSize',
-
-	        // ----------------------------------------------------------------------
-
-	        /** Sets a new page size */
 	        set: function set(pageSize) {
 	            var firstPageItemIdx = this.pagePos;
 	            this._pageSize = pageSize || this.defaultPageSize || 10;
@@ -1030,12 +1030,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        get: function get() {
 	            return this._pageSize || this._getOptionsValue('pageSize') || this.defaultPageSize;
 	        }
-	    }, {
-	        key: 'pageNumber',
 
 	        // ----------------------------------------------------------------------
 
 	        /** Returns the total page number in this data set. */
+	    }, {
+	        key: 'pageNumber',
 	        get: function get() {
 	            return Math.ceil(this.dataSet.length / this.pageSize);
 	        }
@@ -1097,13 +1097,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }, this);
 	            return this.setItems(items);
 	        }
-	    }, {
-	        key: '_getSelectionFilter',
 
 	        /**
 	         * Returns a filter function returning <code>true</code> if a specified
 	         * item is contained in the specified list.
 	         */
+	    }, {
+	        key: '_getSelectionFilter',
 	        value: function _getSelectionFilter(items) {
 	            var _this = this;
 
@@ -1131,12 +1131,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return filter;
 	        }
-	    }, {
-	        key: 'select',
 
 	        /**
 	         * Selects the specified items.
 	         */
+	    }, {
+	        key: 'select',
 	        value: function select(selection) {
 	            var list = undefined;
 	            var filter = this._getSelectionFilter(selection);
@@ -1147,13 +1147,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return this.setItems(list);
 	        }
-	    }, {
-	        key: 'selected',
 
 	        /**
 	         * Returns <code>true</code> if <em>at least one</em> specified item
 	         * is contained in this selection data set.
 	         */
+	    }, {
+	        key: 'selected',
 	        value: function selected(selection) {
 	            var filter = this._getSelectionFilter(selection);
 	            return this.find(filter);
