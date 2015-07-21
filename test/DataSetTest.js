@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import { DataSet } from '..';
+import { DataSet, Data } from '..';
 
 describe('DataSet', function() {
     function check(first, second){
@@ -191,7 +191,46 @@ describe('DataSet', function() {
             '</root>',
         ].join('\n');
         expect(str).to.eql(control);
-    })
+    });
+    
+    it('should re-cast data objects', function(){
+        class First extends Data { }
+        class Second extends Data { }
+        const first = new DataSet({DataType: First});
+        const second = new DataSet({DataType: Second});
+        first.items = [{
+            id: '123',
+            msg: 'One'
+        }, {
+            id: '234',
+            msg: 'Two'
+        }, {
+            id: '345',
+            msg: 'Three'
+        }];
+        expect(first.length).to.eql(3);
+        expect(second.length).to.eql(0);
+        for (let i=0, len=first.length; i<len; i++) {
+            expect(first.get(i) instanceof First).to.be(true);
+            expect(second.get(i)).to.be(undefined);
+        }
+
+        second.items = first.items;
+        expect(second.length).to.eql(first.length);
+        for (let i=0, len=second.length; i<len; i++) {
+            expect(second.get(i) instanceof Second).to.be(true);
+        }
+        
+        for (let i=0, len=second.length; i<len; i++) {
+            expect(first.get(i).data).to.be(second.get(i).data);
+            expect(first.items[i].id).to.be(second.items[i].id);
+        }
+        
+        ['123', '234', '345'].forEach(function(id, i){
+            expect(first.items[i].id).to.eql(id);
+            expect(second.items[i].id).to.eql(id);
+        });
+    });
 });
 
 function report(msg, action){

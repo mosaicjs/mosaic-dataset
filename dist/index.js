@@ -472,9 +472,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var item = data;
 	            var DataType = this.DataType;
 	            if (!(item instanceof DataType)) {
-	                if (item instanceof _Data3['default']) {
-	                    data = item.data;
-	                }
 	                item = new DataType({
 	                    dataSet: this,
 	                    adapters: this.adapters,
@@ -782,6 +779,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Associates a new data object with this item.
 	         */
 	        set: function set(d) {
+	            if (d instanceof Data) {
+	                d = d.data;
+	            }
 	            this._data = d || {};
 	            delete this._id;
 	            return this._data;
