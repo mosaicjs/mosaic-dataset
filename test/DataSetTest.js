@@ -231,6 +231,36 @@ describe('DataSet', function() {
             expect(second.items[i].id).to.eql(id);
         });
     });
+    
+    describe('intersection method', function(){
+        it('should return intersection between multiple data sets', function() {
+            let first = new DataSet();
+            let second = new DataSet();
+            let third = new DataSet();
+            first.items = [
+               { msg: 'First'},
+               { msg: 'Second'},
+               { msg: 'Third'},
+               { msg: 'Fourth'},
+               { msg: 'Fifth'},
+               { msg: 'Sixth'},
+           ];
+            second.items = [
+                 first.items[0],
+                 first.items[2],
+                 first.items[3],
+                 first.items[5]
+            ];
+            third.items = [
+                 first.items[1],
+                 first.items[2],
+                 first.items[4],
+                 first.items[5]
+            ];
+            expect(DataSet.intersection(first, second, third))
+            .to.eql([first.items[2], first.items[5]]);
+        });
+    });
 });
 
 function report(msg, action){
