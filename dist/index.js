@@ -417,6 +417,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function each(visitor, context) {
 	            return this.items.forEach(visitor, context);
 	        }
+	    }, {
+	        key: 'forEach',
+	        value: function forEach(visitor, context) {
+	            return this.items.forEach(visitor, context);
+	        }
 
 	        /**
 	         * Calls the specified visitor function with each item in the list and
@@ -517,6 +522,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'visit',
 
+	        // ----------------------------------------------------------------------
+
 	        /**
 	         * Visits this items
 	         * 
@@ -540,6 +547,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return result;
 	        }
+
+	        // ----------------------------------------------------------------------
+
+	        /**
+	         * Returns a list of elements existing in all data sets.
+	         */
 	    }, {
 	        key: 'dataSet',
 	        set: function set(_set) {
@@ -592,6 +605,111 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        set: function set(type) {
 	            this._DataType = type;
+	        }
+	    }], [{
+	        key: 'intersection',
+	        value: function intersection() {
+	            for (var _len3 = arguments.length, list = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	                list[_key3] = arguments[_key3];
+	            }
+
+	            if (!list || !list.length) return [];
+	            list = list.sort(function (a, b) {
+	                return a.length > b.length ? 1 : -1;
+	            });
+	            var result = [];
+	            var first = list[0];
+	            first.forEach(function (item) {
+	                var contained = true;
+	                for (var i = 1; contained && i < list.length; i++) {
+	                    contained = list[i].has(item);
+	                }
+	                if (contained) {
+	                    result.push(item);
+	                }
+	            });
+	            return result;
+	        }
+
+	        // ----------------------------------------------------------------------
+
+	        /**
+	         * Returns a diff of the data set content before and after an update intent.
+	         * The returned object contains the following fields: 1) "added" a list of
+	         * elements present in the data set after modifications 2) "removed" list of
+	         * elements existing only before modifications 3) "updated" list of elements
+	         * present in the data set before and after modifications.
+	         * 
+	         * @param intent
+	         *            a modification promise or intent
+	         */
+	    }, {
+	        key: 'diff',
+	        value: function diff(dataSet, intent) {
+	            var that = this;
+	            var before = that._getIndex(dataSet);
+	            return intent.then(function () {
+	                var after = that._getIndex(dataSet);
+	                return that._delta(before, after);
+	            });
+	        }
+
+	        /**
+	         * Returns a delta object containing differences between two specified data
+	         * sets.
+	         */
+	    }, {
+	        key: 'delta',
+	        value: function delta(first, second) {
+	            var firstIndex = this._getIndex(first);
+	            var secondIndex = this._getIndex(second);
+	            return this._delta(firstIndex, secondIndex);
+	        }
+
+	        /**
+	         * Returns an object containing identifiers with the corresponding
+	         * resources.
+	         */
+	    }, {
+	        key: '_getIndex',
+	        value: function _getIndex(dataSet) {
+	            var result = {};
+	            dataSet.forEach(function (r) {
+	                result[r.id] = r;
+	            });
+	            return result;
+	        }
+
+	        /**
+	         * Makes a diff between two specified indexes and returns an object with the
+	         * following fields: 1) "added" a list of elements present in the second
+	         * index but absent in the first one 2) "removed" list of elements existing
+	         * only in the first index 3) "updated" list of elements present in both
+	         * indexes.
+	         */
+	    }, {
+	        key: '_delta',
+	        value: function _delta(first, second) {
+	            var result = {
+	                added: [],
+	                removed: [],
+	                updated: []
+	            };
+	            for (var id in first) {
+	                var a = first[id];
+	                var b = second[id];
+	                if (!!b) {
+	                    result.updated.push(b);
+	                    delete second[id];
+	                } else {
+	                    result.removed.push(a);
+	                }
+	            }
+	            for (var id in second) {
+	                var r = second[id];
+	                result.added.push(r);
+	            }
+	            return result;
 	        }
 	    }]);
 
@@ -851,7 +969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error('Parameters are not defined');
 	        }
 	        this._onMainDataSetUpdate = this._onMainDataSetUpdate.bind(this);
-	        this.dataSet.on('update', this._onMainDataSetUpdate);
+	        this.dataSet.addListener('update', this._onMainDataSetUpdate);
 	        this._handleMainDataSetUpdate();
 	    }
 
@@ -860,7 +978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function close() {
 	            _get(Object.getPrototypeOf(DerivativeDataSet.prototype), 'close', this).call(this);
 	            var dataSet = this.dataSet;
-	            dataSet.off('update', this._onMainDataSetUpdate);
+	            dataSet.removeListener('update', this._onMainDataSetUpdate);
 	            delete this._dataSet;
 	        }
 
