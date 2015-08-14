@@ -640,15 +640,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * elements existing only before modifications 3) "updated" list of elements
 	         * present in the data set before and after modifications.
 	         * 
-	         * @param intent
-	         *            a modification promise or intent
+	         * @param an
+	         *            action performing modification of the data set and returning
+	         *            an intent or a promise
 	         */
 	    }, {
 	        key: 'diff',
-	        value: function diff(dataSet, intent) {
+	        value: function diff(dataSet, action) {
 	            var that = this;
 	            var before = that._getIndex(dataSet);
-	            return intent.then(function () {
+	            var promise = undefined;
+	            if (typeof action === 'function') {
+	                promise = action();
+	            } else {
+	                promise = action;
+	            }
+	            return promise.then(function () {
 	                var after = that._getIndex(dataSet);
 	                return that._delta(before, after);
 	            });

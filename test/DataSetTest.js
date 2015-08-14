@@ -281,23 +281,22 @@ describe('DataSet', function() {
                 return list;
             }
             let index = {};
-            let count = 100;
+            let count = 10;
             let first = generate(count);
             let second = generate(count);
             let third = generate(count);
-            let forth = generate(count);
+            let fourth = generate(count);
             
             let listA = [].concat(first).concat(second).concat(third);
-            let listB = [].concat(forth).concat(first).concat(third);
+            let listB = [].concat(fourth).concat(first).concat(third);
 
             let dataSet = new DataSet();
             dataSet.setItems(listA).then(function(){
-                expect(toJson(dataSet.items)).to.eql(listA);
-
-                let intent = dataSet.setItems(listB);
-                DataSet.diff(dataSet, intent).then(function(diff){
+                return DataSet.diff(dataSet, function(){
+                    return dataSet.setItems(listB);
+                }).then(function(diff){
                     expect(toJson(dataSet.items)).to.eql(listB);
-                    expect(toJson(diff.added)).to.eql(forth);
+                    expect(toJson(diff.added)).to.eql(fourth);
                     expect(toJson(diff.removed)).to.eql(second);
                     expect(toJson(diff.updated)).to.eql(first.concat(third));
                 });
