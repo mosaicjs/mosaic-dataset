@@ -373,6 +373,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        /**
+	         * Removes a specified data item.
+	         */
+	    }, {
+	        key: 'removeItem',
+	        value: function removeItem(item) {
+	            var pos = this.pos(item);
+	            return this.remove(pos);
+	        }
+
+	        /**
 	         * Removes a data item corresponding to the specified identifier.
 	         */
 	    }, {
@@ -1255,6 +1265,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                })();
 	            }
 	            return filter;
+	        }
+	    }, {
+	        key: 'toggle',
+	        value: function toggle(item) {
+	            var that = this;
+	            var newItems = [];
+	            var items = Array.isArray(item) ? item : [item];
+	            items.forEach(function (item) {
+	                var pos = that.pos(item);
+	                if (pos < 0) {
+	                    newItems.push(item);
+	                }
+	            });
+	            return that.setItems(newItems);
 	        }
 
 	        /**
