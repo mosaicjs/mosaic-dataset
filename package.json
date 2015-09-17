@@ -30,7 +30,7 @@
     "webpack": "^1.10.1"
   },
   "dependencies": {
-    "mosaic-adapters": "^0.2.4",
-    "mosaic-intents": "^0.2.6"
+    "mosaic-adapters": "^0.2.5",
+    "mosaic-intents": "^0.2.7"
   }
 }
