@@ -206,6 +206,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        (_get2 = _get(Object.getPrototypeOf(DataSet.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
 	        (0, _mosaicIntents.Intents)(this);
+	        this._items = [];
+	        this._index = {};
 	        this.options = options || {};
 	        this.items = this.options.items;
 	        if (this.options.DataType) {
@@ -255,16 +257,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        value: function setItems(items) {
 	            return this.update(function () {
-	                this._items = [];
-	                this._index = {};
-	                var len = items ? items.length || 0 : 0;
-	                for (var pos = 0; pos < len; pos++) {
-	                    var r = this._wrap(items[pos]);
-	                    this._items[pos] = r;
-	                    this._index[r.id] = [r, pos];
-	                }
-	                return true;
+	                return this._setItems(items);
 	            });
+	        }
+	    }, {
+	        key: '_setItems',
+	        value: function _setItems(items) {
+	            this._items = [];
+	            this._index = {};
+	            var len = items ? items.length || 0 : 0;
+	            for (var pos = 0; pos < len; pos++) {
+	                var r = this._wrap(items[pos]);
+	                this._items[pos] = r;
+	                this._index[r.id] = [r, pos];
+	            }
+	            return true;
 	        }
 
 	        /**
@@ -295,19 +302,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'set',
 	        value: function set(d, pos) {
 	            return this.update(function () {
-	                if (pos === undefined) {
-	                    pos = this._items.length;
-	                }
-	                pos = Math.max(0, Math.min(this._items.length, +pos));
-	                var prev = this._items[pos];
-	                if (prev) {
-	                    delete this._index[prev[0].id];
-	                }
-	                var r = this._wrap(d);
-	                this._items[pos] = r;
-	                this._index[r.id] = [r, pos];
-	                return true;
+	                return this._set(d, pos);
 	            });
+	        }
+	    }, {
+	        key: '_set',
+	        value: function _set(d, pos) {
+	            if (pos === undefined) {
+	                pos = this._items.length;
+	            }
+	            pos = Math.max(0, Math.min(this._items.length, +pos));
+	            var prev = this._items[pos];
+	            if (prev) {
+	                delete this._index[prev[0].id];
+	            }
+	            var r = this._wrap(d);
+	            this._items[pos] = r;
+	            this._index[r.id] = [r, pos];
+	            return true;
 	        }
 
 	        /**
@@ -355,21 +367,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'remove',
 	        value: function remove(pos) {
 	            return this.update(function () {
-	                var items = this._items;
-	                if (pos === undefined || pos < 0 || pos >= items.length) {
-	                    return false;
-	                }
-	                var r = items[pos];
-	                delete this._index[r.id];
-	                items.splice(pos, 1);
-	                for (var i = pos; i < items.length; i++) {
-	                    var _r = items[i];
-	                    var slot = this._index[_r.id];
-	                    if (!slot) throw new Error('DataSet index is broken');
-	                    slot[1]--;
-	                }
-	                return true;
+	                return this._remove(pos);
 	            });
+	        }
+	    }, {
+	        key: '_remove',
+	        value: function _remove(pos) {
+	            var items = this._items;
+	            if (pos === undefined || pos < 0 || pos >= items.length) {
+	                return false;
+	            }
+	            var r = items[pos];
+	            delete this._index[r.id];
+	            items.splice(pos, 1);
+	            for (var i = pos; i < items.length; i++) {
+	                var _r = items[i];
+	                var slot = this._index[_r.id];
+	                if (!slot) throw new Error('DataSet index is broken');
+	                slot[1]--;
+	            }
+	            return true;
 	        }
 
 	        /**
@@ -379,7 +396,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'removeItem',
 	        value: function removeItem(item) {
 	            var pos = this.pos(item);
-	            return this.remove(pos);
+	            var items = this.remove(pos);
+	            return items;
 	        }
 
 	        /**
@@ -483,7 +501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function update(action) {
 	            this.version = (this.version || 0) + 1;
 	            return this.action('update', function (intent) {
-	                return action.call(this);
+	                return action.call(this, intent);
 	            });
 	        }
 
@@ -565,9 +583,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	    }, {
 	        key: 'dataSet',
-	        set: function set(_set) {
-	            if (!!_set) {
-	                this[DATA_SET_KEY] = _set;
+	        set: function set(_set2) {
+	            if (!!_set2) {
+	                this[DATA_SET_KEY] = _set2;
 	            } else {
 	                delete this[DATA_SET_KEY];
 	            }
