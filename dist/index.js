@@ -500,9 +500,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'update',
 	        value: function update(action) {
 	            this.version = (this.version || 0) + 1;
-	            return this.action('update', function (intent) {
+	            return this.action('update', (function (intent) {
 	                return action.call(this, intent);
-	            });
+	            }).bind(this));
 	        }
 
 	        /**
