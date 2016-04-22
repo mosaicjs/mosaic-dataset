@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("mosaic-intents"), require("mosaic-adapters"));
+		module.exports = factory(require("mosaic-adapters"), require("mosaic-intents"));
 	else if(typeof define === 'function' && define.amd)
-		define(["mosaic-intents", "mosaic-adapters"], factory);
+		define(["mosaic-adapters", "mosaic-intents"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("mosaic-intents"), require("mosaic-adapters")) : factory(root["mosaic-intents"], root["mosaic-adapters"]);
+		var a = typeof exports === 'object' ? factory(require("mosaic-adapters"), require("mosaic-intents")) : factory(root["mosaic-adapters"], root["mosaic-intents"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_4__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -62,19 +62,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _libData = __webpack_require__(5);
+	var _libData = __webpack_require__(1);
 
 	var _libData2 = _interopRequireDefault(_libData);
 
-	var _libDataSet = __webpack_require__(2);
+	var _libDataSet = __webpack_require__(3);
 
 	var _libDataSet2 = _interopRequireDefault(_libDataSet);
 
-	var _libDerivativeDataSet = __webpack_require__(6);
+	var _libDerivativeDataSet = __webpack_require__(5);
 
 	var _libDerivativeDataSet2 = _interopRequireDefault(_libDerivativeDataSet);
 
-	var _libDataSetFiltered = __webpack_require__(1);
+	var _libDataSetFiltered = __webpack_require__(6);
 
 	var _libDataSetFiltered2 = _interopRequireDefault(_libDataSetFiltered);
 
@@ -113,51 +113,197 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _DataSet = __webpack_require__(2);
+	var _mosaicAdapters = __webpack_require__(2);
 
-	var _DataSet2 = _interopRequireDefault(_DataSet);
+	var idCounter = 0;
+	/**
+	 * 
+	 */
 
-	var _DerivativeDataSet2 = __webpack_require__(6);
+	var Data = (function (_Adaptable) {
+	    _inherits(Data, _Adaptable);
 
-	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
+	    /**
+	     * This constructor initializes this wrapper and sets the internal data.
+	     * 
+	     * @param options.adapters
+	     *            an adapter manager used to generate data adapters
+	     * @param options.data
+	     *            the data object
+	     */
 
-	var DataSetFiltered = (function (_DerivativeDataSet) {
-	    _inherits(DataSetFiltered, _DerivativeDataSet);
+	    function Data(options) {
+	        var _get2;
 
-	    function DataSetFiltered() {
-	        _classCallCheck(this, DataSetFiltered);
+	        _classCallCheck(this, Data);
 
-	        _get(Object.getPrototypeOf(DataSetFiltered.prototype), 'constructor', this).apply(this, arguments);
+	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	            args[_key - 1] = arguments[_key];
+	        }
+
+	        (_get2 = _get(Object.getPrototypeOf(Data.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
+	        this.data = options ? options.data : undefined;
 	    }
 
-	    _createClass(DataSetFiltered, [{
-	        key: '_handleMainDataSetUpdate',
-	        value: function _handleMainDataSetUpdate() {
-	            var filter = this._getOptionsValue('filter');
-	            if (filter) {
-	                this.items = this.dataSet.items.filter(filter, this);
+	    /**
+	     * Returns the type key for this item. This is a shortcut for the
+	     * "getTypeKey" method.
+	     */
+
+	    _createClass(Data, [{
+	        key: 'getTypeKey',
+
+	        /**
+	         * Returns the type key for this item.
+	         */
+	        value: function getTypeKey() {
+	            var type = this.get('properties.type') || this.get('type');
+	            if (type) {
+	                type = _mosaicAdapters.TypeKey.getTypeKey(type);
 	            } else {
-	                this.items = this.dataSet.items;
+	                // Use the class hierarchy if type is not defined in the data
+	                type = _mosaicAdapters.TypeKey.getTypeKey.apply(this);
 	            }
+	            return type;
+	        }
+
+	        /**
+	         * Returns the internal data managed by this item.
+	         */
+	    }, {
+	        key: 'get',
+
+	        /**
+	         * Returns a value corresponding to the specified path.
+	         * 
+	         * @param path
+	         *            an segment name array or a string path where individual
+	         *            segments are separated by the '.' symbol
+	         */
+	        value: function get(path) {
+	            if (typeof path === 'string') {
+	                var array = path.split('.');
+	                return this.get(array);
+	            }
+	            var data = this.data;
+	            var len = path ? path.length : 0;
+	            var i = undefined;
+	            for (i = 0; data && i < len; i++) {
+	                var segment = path[i];
+	                data = data[segment];
+	            }
+	            return i === len ? data : null;
+	        }
+
+	        /**
+	         * Sets a new value for the specified path.
+	         */
+	    }, {
+	        key: 'set',
+	        value: function set(path, value) {
+	            if (typeof path === 'string') {
+	                var array = path.split('.');
+	                return this.set(array, value);
+	            }
+	            var data = this.data;
+	            var len = path ? path.length : 0;
+	            var i = undefined;
+	            for (i = 0; i < len - 1; i++) {
+	                var segment = path[i];
+	                var next = data[segment];
+	                if (!next) break;
+	                data = next;
+	            }
+	            // Add missing objects
+	            for (; i < len - 1; i++) {
+	                var segment = path[i];
+	                data = data[segment] = {};
+	            }
+	            if (data) {
+	                var segment = path[path.length - 1];
+	                data[segment] = value;
+	            }
+	            return this;
+	        }
+
+	        /**
+	         * Visits this data object
+	         * 
+	         * @param visitor.before
+	         *            this method is called before this data object is visited
+	         * @param visitor.after
+	         *            this method is called after this data object is visited
+	         */
+	    }, {
+	        key: 'visit',
+	        value: function visit(visitor) {
+	            if (visitor.before) {
+	                visitor.before.call(visitor, this);
+	            }
+	            if (visitor.after) {
+	                visitor.after.call(visitor, this);
+	            }
+	        }
+	    }, {
+	        key: 'type',
+	        get: function get() {
+	            return this.getTypeKey();
+	        }
+	    }, {
+	        key: 'data',
+	        get: function get() {
+	            return this._data;
+	        },
+
+	        /**
+	         * Associates a new data object with this item.
+	         */
+	        set: function set(d) {
+	            if (d instanceof Data) {
+	                d = d.data;
+	            }
+	            this._data = d || {};
+	            delete this._id;
+	            return this._data;
+	        }
+
+	        /**
+	         * Returns this data object identifier. By default this method seeks the
+	         * identifier in the "id" field of the underlying data object. If there is
+	         * no such an identifier then this method generates a local ID stored in
+	         * this data object.
+	         */
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            var id = this.data.id;
+	            if (id === undefined) {
+	                id = this._id = this._id || ++idCounter;
+	            }
+	            return id;
 	        }
 	    }]);
 
-	    return DataSetFiltered;
-	})(_DerivativeDataSet3['default']);
+	    return Data;
+	})(_mosaicAdapters.Adaptable);
 
-	exports['default'] = DataSetFiltered;
+	exports['default'] = Data;
 	module.exports = exports['default'];
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -169,19 +315,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _mosaicIntents = __webpack_require__(3);
+	var _mosaicIntents = __webpack_require__(4);
 
-	var _mosaicAdapters = __webpack_require__(4);
+	var _mosaicAdapters = __webpack_require__(2);
 
-	var _Data2 = __webpack_require__(5);
+	var _Data2 = __webpack_require__(1);
 
 	var _Data3 = _interopRequireDefault(_Data2);
 
@@ -757,12 +903,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
-
-/***/ },
 /* 4 */
 /***/ function(module, exports) {
 
@@ -780,210 +920,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-	var _mosaicAdapters = __webpack_require__(4);
-
-	var idCounter = 0;
-	/**
-	 * 
-	 */
-
-	var Data = (function (_Adaptable) {
-	    _inherits(Data, _Adaptable);
-
-	    /**
-	     * This constructor initializes this wrapper and sets the internal data.
-	     * 
-	     * @param options.adapters
-	     *            an adapter manager used to generate data adapters
-	     * @param options.data
-	     *            the data object
-	     */
-
-	    function Data(options) {
-	        var _get2;
-
-	        _classCallCheck(this, Data);
-
-	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	            args[_key - 1] = arguments[_key];
-	        }
-
-	        (_get2 = _get(Object.getPrototypeOf(Data.prototype), 'constructor', this)).call.apply(_get2, [this, options].concat(args));
-	        this.data = options ? options.data : undefined;
-	    }
-
-	    /**
-	     * Returns the type key for this item. This is a shortcut for the
-	     * "getTypeKey" method.
-	     */
-
-	    _createClass(Data, [{
-	        key: 'getTypeKey',
-
-	        /**
-	         * Returns the type key for this item.
-	         */
-	        value: function getTypeKey() {
-	            var type = this.get('properties.type') || this.get('type');
-	            if (type) {
-	                type = _mosaicAdapters.TypeKey.getTypeKey(type);
-	            } else {
-	                // Use the class hierarchy if type is not defined in the data
-	                type = _mosaicAdapters.TypeKey.getTypeKey.apply(this);
-	            }
-	            return type;
-	        }
-
-	        /**
-	         * Returns the internal data managed by this item.
-	         */
-	    }, {
-	        key: 'get',
-
-	        /**
-	         * Returns a value corresponding to the specified path.
-	         * 
-	         * @param path
-	         *            an segment name array or a string path where individual
-	         *            segments are separated by the '.' symbol
-	         */
-	        value: function get(path) {
-	            if (typeof path === 'string') {
-	                var array = path.split('.');
-	                return this.get(array);
-	            }
-	            var data = this.data;
-	            var len = path ? path.length : 0;
-	            var i = undefined;
-	            for (i = 0; data && i < len; i++) {
-	                var segment = path[i];
-	                data = data[segment];
-	            }
-	            return i === len ? data : null;
-	        }
-
-	        /**
-	         * Sets a new value for the specified path.
-	         */
-	    }, {
-	        key: 'set',
-	        value: function set(path, value) {
-	            if (typeof path === 'string') {
-	                var array = path.split('.');
-	                return this.set(array, value);
-	            }
-	            var data = this.data;
-	            var len = path ? path.length : 0;
-	            var i = undefined;
-	            for (i = 0; i < len - 1; i++) {
-	                var segment = path[i];
-	                var next = data[segment];
-	                if (!next) break;
-	                data = next;
-	            }
-	            // Add missing objects
-	            for (; i < len - 1; i++) {
-	                var segment = path[i];
-	                data = data[segment] = {};
-	            }
-	            if (data) {
-	                var segment = path[path.length - 1];
-	                data[segment] = value;
-	            }
-	            return this;
-	        }
-
-	        /**
-	         * Visits this data object
-	         * 
-	         * @param visitor.before
-	         *            this method is called before this data object is visited
-	         * @param visitor.after
-	         *            this method is called after this data object is visited
-	         */
-	    }, {
-	        key: 'visit',
-	        value: function visit(visitor) {
-	            if (visitor.before) {
-	                visitor.before.call(visitor, this);
-	            }
-	            if (visitor.after) {
-	                visitor.after.call(visitor, this);
-	            }
-	        }
-	    }, {
-	        key: 'type',
-	        get: function get() {
-	            return this.getTypeKey();
-	        }
-	    }, {
-	        key: 'data',
-	        get: function get() {
-	            return this._data;
-	        },
-
-	        /**
-	         * Associates a new data object with this item.
-	         */
-	        set: function set(d) {
-	            if (d instanceof Data) {
-	                d = d.data;
-	            }
-	            this._data = d || {};
-	            delete this._id;
-	            return this._data;
-	        }
-
-	        /**
-	         * Returns this data object identifier. By default this method seeks the
-	         * identifier in the "id" field of the underlying data object. If there is
-	         * no such an identifier then this method generates a local ID stored in
-	         * this data object.
-	         */
-	    }, {
-	        key: 'id',
-	        get: function get() {
-	            var id = this.data.id;
-	            if (id === undefined) {
-	                id = this._id = this._id || ++idCounter;
-	            }
-	            return id;
-	        }
-	    }]);
-
-	    return Data;
-	})(_mosaicAdapters.Adaptable);
-
-	exports['default'] = Data;
-	module.exports = exports['default'];
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _DataSet2 = __webpack_require__(2);
+	var _DataSet2 = __webpack_require__(3);
 
 	var _DataSet3 = _interopRequireDefault(_DataSet2);
 
@@ -1060,6 +1005,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _DataSet = __webpack_require__(3);
+
+	var _DataSet2 = _interopRequireDefault(_DataSet);
+
+	var _DerivativeDataSet2 = __webpack_require__(5);
+
+	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
+
+	var DataSetFiltered = (function (_DerivativeDataSet) {
+	    _inherits(DataSetFiltered, _DerivativeDataSet);
+
+	    function DataSetFiltered() {
+	        _classCallCheck(this, DataSetFiltered);
+
+	        _get(Object.getPrototypeOf(DataSetFiltered.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    _createClass(DataSetFiltered, [{
+	        key: '_handleMainDataSetUpdate',
+	        value: function _handleMainDataSetUpdate() {
+	            var filter = this._getOptionsValue('filter');
+	            if (filter) {
+	                this.items = this.dataSet.items.filter(filter, this);
+	            } else {
+	                this.items = this.dataSet.items;
+	            }
+	        }
+	    }]);
+
+	    return DataSetFiltered;
+	})(_DerivativeDataSet3['default']);
+
+	exports['default'] = DataSetFiltered;
+	module.exports = exports['default'];
+
+/***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1071,15 +1071,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _DerivativeDataSet2 = __webpack_require__(6);
+	var _DerivativeDataSet2 = __webpack_require__(5);
 
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
@@ -1212,19 +1212,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _DataSet = __webpack_require__(2);
+	var _DataSet = __webpack_require__(3);
 
 	var _DataSet2 = _interopRequireDefault(_DataSet);
 
-	var _DerivativeDataSet2 = __webpack_require__(6);
+	var _DerivativeDataSet2 = __webpack_require__(5);
 
 	var _DerivativeDataSet3 = _interopRequireDefault(_DerivativeDataSet2);
 
